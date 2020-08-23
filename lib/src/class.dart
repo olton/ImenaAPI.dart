@@ -49,11 +49,11 @@ class ImenaAPI {
     return this.error == null;
   }
 
-  dynamic getError(){
+  dynamic getError() {
     return this.error;
   }
 
-  dynamic getResult(){
+  dynamic getResult() {
     return this.result;
   }
 
@@ -63,8 +63,8 @@ class ImenaAPI {
     this._login = login;
     this._password = password;
 
-    result = await _exec(
-        ImenaAPIConst.COMMAND_LOGIN, {"login": this._login, "password": this._password});
+    result = await _exec(ImenaAPIConst.COMMAND_LOGIN,
+        {"login": this._login, "password": this._password});
 
     if (!result) {
       return false;
@@ -88,8 +88,7 @@ class ImenaAPI {
       body.addAll({"gaCode": code});
     }
 
-    result = await _exec(
-        ImenaAPIConst.COMMAND_LOGIN, body);
+    result = await _exec(ImenaAPIConst.COMMAND_LOGIN, body);
 
     if (!result) {
       return false;
@@ -107,9 +106,8 @@ class ImenaAPI {
   Future<bool> logout() async {
     var result;
 
-    result = _exec(ImenaAPIConst.COMMAND_LOGOUT, {
-      "authToken": this._authToken
-    });
+    result =
+        _exec(ImenaAPIConst.COMMAND_LOGOUT, {"authToken": this._authToken});
 
     if (!result) {
       return false;
@@ -123,34 +121,114 @@ class ImenaAPI {
   }
 
   Future<dynamic> tokenInfo() async {
-    var result = await _exec(ImenaAPIConst.COMMAND_TOKEN_INFO, {
-      "authToken": this._authToken
+    var result = await _exec(
+        ImenaAPIConst.COMMAND_TOKEN_INFO, {"authToken": this._authToken});
+
+    return !result ? false : this.result;
+  }
+
+  Future<Map<String, dynamic>> domains([int limit = 500, int offset = 0]) async {
+    var result;
+    Map<String, dynamic> domainList = {};
+
+    result = await _exec(ImenaAPIConst.COMMAND_DOMAINS_LIST,
+        {"authToken": this._authToken, "limit": limit, "offset": offset});
+
+    if (result) {
+      this.result['list'].forEach((elem){
+        domainList.addAll({elem['domainName']: elem});
+      });
+    }
+
+    return domainList;
+  }
+
+  Future<int> domainsTotal() async {
+    var result;
+
+    result = await _exec(ImenaAPIConst.COMMAND_DOMAINS_LIST,
+        {"authToken": this._authToken, "limit": 1, "offset": 0});
+
+    return !result ? 0 : this.result['total'];
+  }
+
+  Future<dynamic> domainsBy([filter = ""]) async {
+    Map<String, dynamic> domainList = new Map();
+    int limit = 500;
+    int total = await domainsTotal();
+    int pages;
+    int i;
+    var result;
+
+    if (total == 0) {
+      return false;
+    }
+
+    pages = (total / limit).ceil();
+
+    for(i = 0; i < pages; i++) {
+      result = await domains(limit, limit * i);
+
+      if (i == 0 && result.length == 0) {
+        print("empty");
+        return domainList;
+      }
+
+      result.forEach((key, val){
+        if (key.contains(filter))
+          domainList.addAll({key: val});
+      });
+    }
+
+    return domainList;
+  }
+
+  Future<dynamic> domainInfo(serviceCode) async {
+    bool result = await _exec(ImenaAPIConst.COMMAND_DOMAIN_INFO, {
+      "authToken": this._authToken,
+      "serviceCode": serviceCode
     });
 
     return !result ? false : this.result;
   }
 
-  Future<dynamic> domains([int limit = 500, int offset = 0]) async {
-    var result;
-
-    result = await _exec(ImenaAPIConst.COMMAND_DOMAINS_LIST, {
+  Future<dynamic> domainInfoShort(domainName) async {
+    bool result = await _exec(ImenaAPIConst.COMMAND_DOMAIN_INFO_SHORT, {
       "authToken": this._authToken,
-      "limit": limit,
-      "offset": offset
+      "domainName": domainName
     });
 
-    return !result ? false : this.result['list'];
+    return !result ? false : this.result;
   }
 
-  Future<dynamic> domainsTotal() async {
-    var result;
+  Future<dynamic> contacts(serviceCode) async{
+    Map<String, dynamic> contactList = {};
+    var result = await domainInfo(serviceCode);
 
-    result = await _exec(ImenaAPIConst.COMMAND_DOMAINS_LIST, {
-      "authToken": this._authToken,
-      "limit": 1,
-      "offset": 0
-    });
+    if (result != Future.value(false)) {
+      this.result['contacts'].forEach((elem){
+        contactList.addAll({elem["contactType"]: elem});
+      });
+    }
 
-    return !result ? false : this.result['total'];
+    return contactList;
+  }
+
+  Future<dynamic> tags(serviceCode) async{
+    var result = await domainInfo(serviceCode);
+
+    return result == Future.value(false) ? false : this.result['tagList'];
+  }
+
+  Future<dynamic> nameservers(serviceCode) async{
+    var result = await domainInfo(serviceCode);
+
+    return result == Future.value(false) ? false : this.result['nameservers'];
+  }
+
+  Future<dynamic> childNameservers(serviceCode) async{
+    var result = await domainInfo(serviceCode);
+
+    return result == Future.value(false) ? false : this.result['childNameservers'];
   }
 }

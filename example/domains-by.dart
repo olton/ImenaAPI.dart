@@ -18,11 +18,11 @@ void main() async {
 
   Debug.log("\nLogin successful, authToken is: ${api.authToken()}");
 
-  Debug.log("\nGet domains...\n");
+  Debug.log("\nGet domains by name...\n");
 
-  domains = await api.domainsTotal();
-  if (domains == 0) {
-    Debug.log("\nCan't get domain list!\n");
+  domains = await api.domainsBy("stoy");
+  if (domains.length == 0) {
+    Debug.log("\nCan't get domain list or list empty!\n");
     Debug.log(api.getError());
     exit(0);
   }

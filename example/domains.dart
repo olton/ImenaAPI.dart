@@ -21,8 +21,8 @@ void main() async {
   Debug.log("\nGet domains...\n");
 
   domains = await api.domains();
-  if (domains == Future.value(false)) {
-    Debug.log("\nCan't get domain list!\n");
+  if (domains.length == 0) {
+    Debug.log("\nCan't get domain list or list empty!\n");
     Debug.log(api.getError());
     exit(0);
   }

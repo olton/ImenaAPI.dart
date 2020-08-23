@@ -7,7 +7,9 @@ import 'auth.dart';
 void main() async {
   ImenaAPI api = new ImenaAPI(API_ENDPOINT);
 
-  var result, domains;
+  var result, domain;
+  const domainName = "pimenov.com.ua";
+  const serviceCode = "815633";
 
   result = await api.login(API_LOGIN, API_PASSWORD);
 
@@ -18,13 +20,13 @@ void main() async {
 
   Debug.log("\nLogin successful, authToken is: ${api.authToken()}");
 
-  Debug.log("\nGet domains...\n");
+  Debug.log("\nGet domain tag list for $domainName...\n");
 
-  domains = await api.domainsTotal();
-  if (domains == 0) {
-    Debug.log("\nCan't get domain list!\n");
+  domain = await api.tags(serviceCode);
+  if (domain == Future.value(false)) {
+    Debug.log("\nCan't get domain!\n");
     Debug.log(api.getError());
     exit(0);
   }
-  Debug.log(domains, "default", "Domains total");
+  Debug.log(domain, "map", "Domain info");
 }
