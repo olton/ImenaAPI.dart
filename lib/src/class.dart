@@ -31,13 +31,9 @@ class ImenaAPI {
     Map<String, dynamic> requestBody = {
       "jsonrpc": "2.0",
       "id": trID,
-      "params": body,
-      "method": cmd
+      "method": cmd,
+      "params": body
     };
-
-    if (cmd != ImenaAPIConst.COMMAND_LOGIN) {
-      requestBody.addAll({"authToken": this._authToken});
-    }
 
     Debug.log(requestBody, "map", "Request");
 
@@ -53,6 +49,14 @@ class ImenaAPI {
     return this.error == null;
   }
 
+  dynamic getError(){
+    return this.error;
+  }
+
+  dynamic getResult(){
+    return this.result;
+  }
+
   Future<bool> login(String login, String password) async {
     var result;
 
@@ -62,25 +66,13 @@ class ImenaAPI {
     result = await _exec(
         ImenaAPIConst.COMMAND_LOGIN, {"login": this._login, "password": this._password});
 
-    if (result == Future.value(false)) {
+    if (!result) {
       return false;
     }
 
     this._authToken = this.result['authToken'];
 
     return true;
-  }
-
-  String authToken() {
-    return this._authToken;
-  }
-
-  dynamic getError(){
-    return this.error;
-  }
-
-  dynamic getResult(){
-    return this.result;
   }
 
   Future<bool> secondAuth(code, [type = ImenaAPIConst.SECOND_AUTH_SMS]) async {
@@ -99,7 +91,7 @@ class ImenaAPI {
     result = await _exec(
         ImenaAPIConst.COMMAND_LOGIN, body);
 
-    if (result == Future.value(false)) {
+    if (!result) {
       return false;
     }
 
@@ -108,12 +100,18 @@ class ImenaAPI {
     return true;
   }
 
+  String authToken() {
+    return this._authToken;
+  }
+
   Future<bool> logout() async {
     var result;
 
-    result = _exec(ImenaAPIConst.COMMAND_LOGOUT);
+    result = _exec(ImenaAPIConst.COMMAND_LOGOUT, {
+      "authToken": this._authToken
+    });
 
-    if (result == Future.value(false)) {
+    if (!result) {
       return false;
     }
 
@@ -129,10 +127,30 @@ class ImenaAPI {
       "authToken": this._authToken
     });
 
-    if (result == Future.value(false)) {
-      return false;
-    }
+    return !result ? false : this.result;
+  }
 
-    return this.result;
+  Future<dynamic> domains([int limit = 500, int offset = 0]) async {
+    var result;
+
+    result = await _exec(ImenaAPIConst.COMMAND_DOMAINS_LIST, {
+      "authToken": this._authToken,
+      "limit": limit,
+      "offset": offset
+    });
+
+    return !result ? false : this.result['list'];
+  }
+
+  Future<dynamic> domainsTotal() async {
+    var result;
+
+    result = await _exec(ImenaAPIConst.COMMAND_DOMAINS_LIST, {
+      "authToken": this._authToken,
+      "limit": 1,
+      "offset": 0
+    });
+
+    return !result ? false : this.result['total'];
   }
 }
