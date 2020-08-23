@@ -5,7 +5,7 @@ import 'package:imena/imena.dart';
 
 void main() async {
   const endpoint = "https://rpc.imena.devua.net/v1/";
-  const login = "dnmarketAPIclient";
+  const login = "";
   const password = "";
 
   ImenaAPI api = new ImenaAPI(endpoint);
