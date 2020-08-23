@@ -2,17 +2,14 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:imena/imena.dart';
+import 'auth.dart';
 
 void main() async {
-  const endpoint = "https://rpc.imena.devua.net/v1/";
-  const login = "";
-  const password = "";
-
-  ImenaAPI api = new ImenaAPI(endpoint);
+  ImenaAPI api = new ImenaAPI(API_ENDPOINT);
 
   var result, token;
 
-  result = await api.login(login, password);
+  result = await api.login(API_LOGIN, API_PASSWORD);
 
   if (result == Future.value(false)) {
     Debug.log("\nCan't login to API server!\n");
