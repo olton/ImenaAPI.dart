@@ -20,15 +20,23 @@ void main() async {
   Debug.log("\nLogin successful, authToken is: ${api.authToken()}");
   Debug.log("Get reseller balance...\n");
 
-  price = await api.price(resellerCode);
-  if (price.length == 0) {
-    Debug.log("\nCan't get reseller price list or list empty!\n");
-    Debug.log(api.getError());
-    exit(0);
-  }
-  Debug.log(price, "map", "Price list");
+//  price = await api.price(resellerCode);
+//  if (price.length == 0) {
+//    Debug.log("\nCan't get reseller price list or list empty!\n");
+//    Debug.log(api.getError());
+//    exit(0);
+//  }
+//  Debug.log(price, "map", "Price list");
+//
+//  price = await api.priceDomain(resellerCode, 'one');
+//  if (price.length == 0) {
+//    Debug.log("\nCan't get reseller price list or list empty!\n");
+//    Debug.log(api.getError());
+//    exit(0);
+//  }
+//  Debug.log(price, "map", "Price list");
 
-  price = await api.domainPrice(resellerCode, 'one');
+  price = await api.priceDomains(resellerCode, ['one', 'press']);
   if (price.length == 0) {
     Debug.log("\nCan't get reseller price list or list empty!\n");
     Debug.log(api.getError());

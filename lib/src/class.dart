@@ -426,7 +426,7 @@ class ImenaAPI {
   * Get reseller price list
   * API command - getResellerPrices
   * */
-  Future<Map<String, dynamic>> price(resellerCode) async {
+  Future<Map<String, dynamic>> price(String resellerCode) async {
     Map<String, dynamic> priceList = {};
     bool result = await _exec(ImenaAPIConst.COMMAND_RESELLER_PRICES, {
       "authToken": this._authToken,
@@ -446,8 +446,25 @@ class ImenaAPI {
   * Get reseller price list for specified domain
   * API command - getResellerPrices
   * */
-  Future<Map<String, dynamic>> domainPrice(resellerCode, domain) async {
+  Future<Map<String, dynamic>> priceDomain(String resellerCode, String domain) async {
     Map<String, dynamic> result = await price(resellerCode);
     return result.length == 0 ? {} : result[domain];
+  }
+
+  /*
+  * Get reseller price list for specified domains
+  * API command - getResellerPrices
+  * */
+  Future<Map<String, dynamic>> priceDomains(String resellerCode, List<String> domains) async {
+    Map<String, dynamic> priceList = {};
+    Map<String, dynamic> result = await price(resellerCode);
+
+    result.forEach((key, value) {
+      if (domains.contains(key)) {
+        priceList.addAll({key: value});
+      }
+    });
+
+    return priceList;
   }
 }
