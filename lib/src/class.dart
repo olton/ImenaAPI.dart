@@ -378,4 +378,76 @@ class ImenaAPI {
 
     return result;
   }
+
+  Future<bool> setPrivacy(serviceCode, [disclose = false]) async {
+    bool result = await _exec(ImenaAPIConst.COMMAND_SET_PRIVACY, {
+      "authToken": this._authToken,
+      "serviceCode": serviceCode,
+      "whoisPrivacy": !disclose
+    });
+
+    return result;
+  }
+
+  /*
+  * Get reseller balance info
+  * API command - getResellerBalance
+  * */
+  Future<dynamic> balanceInfo(resellerCode) async {
+    bool result = await _exec(ImenaAPIConst.COMMAND_RESELLER_BALANCE, {
+      "authToken": this._authToken,
+      "resellerCode": resellerCode
+    });
+
+    return !result ? false : this.result;
+  }
+
+  /*
+  * Get reseller balance
+  * API command - getResellerBalance
+  * */
+  Future<dynamic> balance(resellerCode) async {
+    dynamic result = await balanceInfo(resellerCode);
+
+    return result == Future.value(false) ? false : this.result['balance'];
+  }
+
+  /*
+  * Get reseller credit
+  * API command - getResellerBalance
+  * */
+  Future<dynamic> credit(resellerCode) async {
+    dynamic result = await balanceInfo(resellerCode);
+
+    return result == Future.value(false) ? false : this.result['creditLimit'];
+  }
+
+  /*
+  * Get reseller price list
+  * API command - getResellerPrices
+  * */
+  Future<Map<String, dynamic>> price(resellerCode) async {
+    Map<String, dynamic> priceList = {};
+    bool result = await _exec(ImenaAPIConst.COMMAND_RESELLER_PRICES, {
+      "authToken": this._authToken,
+      "resellerCode": resellerCode
+    });
+
+    if (result) {
+      this.result.forEach((elem){
+        priceList.addAll({elem['domain']: elem});
+      });
+    }
+
+    return priceList;
+  }
+
+  /*
+  * Get reseller price list for specified domain
+  * API command - getResellerPrices
+  * */
+  Future<Map<String, dynamic>> domainPrice(resellerCode, domain) async {
+    Map<String, dynamic> result = await price(resellerCode);
+    return result.length == 0 ? {} : result[domain];
+  }
 }
