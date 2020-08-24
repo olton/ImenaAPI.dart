@@ -62,7 +62,7 @@ class ImenaAPI {
   * API command - authenticateResellerUser
   * */
   Future<bool> login(String login, String password) async {
-    var result;
+    bool result;
 
     this._login = login;
     this._password = password;
@@ -80,7 +80,7 @@ class ImenaAPI {
   }
 
   Future<bool> secondAuth(code, [type = ImenaAPIConst.SECOND_AUTH_SMS]) async {
-    var result;
+    bool result;
     Map<String, dynamic> body = {
       "login": this._login,
       "password": this._password
@@ -112,10 +112,7 @@ class ImenaAPI {
   * API command - invalidateAuthToken
   * */
   Future<bool> logout() async {
-    var result;
-
-    result =
-        _exec(ImenaAPIConst.COMMAND_LOGOUT, {"authToken": this._authToken});
+    bool result = await _exec(ImenaAPIConst.COMMAND_LOGOUT, {"authToken": this._authToken});
 
     if (!result) {
       return false;
@@ -133,7 +130,7 @@ class ImenaAPI {
   * API command - getAuthTokenInfo
   * */
   Future<dynamic> tokenInfo() async {
-    var result = await _exec(
+    bool result = await _exec(
         ImenaAPIConst.COMMAND_TOKEN_INFO, {"authToken": this._authToken});
 
     return !result ? false : this.result;
@@ -144,10 +141,8 @@ class ImenaAPI {
   * API command - getDomainsList
   * */
   Future<Map<String, dynamic>> domains([int limit = 500, int offset = 0]) async {
-    var result;
     Map<String, dynamic> domainList = {};
-
-    result = await _exec(ImenaAPIConst.COMMAND_DOMAINS_LIST,
+    bool result = await _exec(ImenaAPIConst.COMMAND_DOMAINS_LIST,
         {"authToken": this._authToken, "limit": limit, "offset": offset});
 
     if (result) {
@@ -163,9 +158,7 @@ class ImenaAPI {
   * Get domains total on reseller account
   * */
   Future<int> domainsTotal() async {
-    var result;
-
-    result = await _exec(ImenaAPIConst.COMMAND_DOMAINS_LIST,
+    bool result = await _exec(ImenaAPIConst.COMMAND_DOMAINS_LIST,
         {"authToken": this._authToken, "limit": 1, "offset": 0});
 
     return !result ? 0 : this.result['total'];
@@ -180,7 +173,7 @@ class ImenaAPI {
     int total = await domainsTotal();
     int pages;
     int i;
-    var result;
+    Map<String, dynamic> result;
 
     if (total == 0) {
       return false;
@@ -236,7 +229,7 @@ class ImenaAPI {
   * */
   Future<dynamic> contacts(serviceCode) async{
     Map<String, dynamic> contactList = {};
-    var result = await domainInfo(serviceCode);
+    dynamic result = await domainInfo(serviceCode);
 
     if (result != Future.value(false)) {
       this.result['contacts'].forEach((elem){
@@ -251,7 +244,7 @@ class ImenaAPI {
   * Get domain tag list
   * */
   Future<dynamic> tags(serviceCode) async{
-    var result = await domainInfo(serviceCode);
+    dynamic result = await domainInfo(serviceCode);
 
     return result == Future.value(false) ? false : this.result['tagList'];
   }
@@ -260,7 +253,7 @@ class ImenaAPI {
   * Get domain nameservers
   * */
   Future<dynamic> nameservers(serviceCode) async{
-    var result = await domainInfo(serviceCode);
+    dynamic result = await domainInfo(serviceCode);
 
     return result == Future.value(false) ? false : this.result['nameservers'];
   }
@@ -269,7 +262,7 @@ class ImenaAPI {
   * Get domain child nameservers
   * */
   Future<dynamic> childNameservers(serviceCode) async{
-    var result = await domainInfo(serviceCode);
+    dynamic result = await domainInfo(serviceCode);
 
     return result == Future.value(false) ? false : this.result['childNameservers'];
   }
@@ -318,9 +311,7 @@ class ImenaAPI {
   * API command - setDomainNameserversToDefault
   * */
   Future<bool> setDefaultNS(String serviceCode) async {
-    bool result = await setNSPreset(serviceCode, ImenaAPIConst.HOSTING_TYPE_DEFAULTS);
-
-    return result;
+    return await setNSPreset(serviceCode, ImenaAPIConst.HOSTING_TYPE_DEFAULTS);
   }
 
   /*
@@ -328,9 +319,7 @@ class ImenaAPI {
   * API command - setDomainNameserversToMirohost
   * */
   Future<bool> setMirohostNS(String serviceCode) async {
-    bool result = await setNSPreset(serviceCode, ImenaAPIConst.HOSTING_TYPE_MIROHOST);
-
-    return result;
+    return await setNSPreset(serviceCode, ImenaAPIConst.HOSTING_TYPE_MIROHOST);
   }
 
   /*
@@ -338,55 +327,45 @@ class ImenaAPI {
   * API command - setDomainNameserversToDnshosting
   * */
   Future<bool> setDnshostingNS(String serviceCode) async {
-    bool result = await setNSPreset(serviceCode, ImenaAPIConst.HOSTING_TYPE_DNS);
-
-    return result;
+    return await setNSPreset(serviceCode, ImenaAPIConst.HOSTING_TYPE_DNS);
   }
 
   Future<bool> addChildNS(serviceCode, host, ip) async {
-    bool result = await _exec(ImenaAPIConst.COMMAND_ADD_CHILD_NS, {
+    return await _exec(ImenaAPIConst.COMMAND_ADD_CHILD_NS, {
       "authToken": this._authToken,
       "serviceCode": serviceCode,
       "host": host,
       "ip": ip
     });
-
-    return result;
   }
 
   Future<bool> deleteChildNS(serviceCode, host, ip) async {
-    bool result = await _exec(ImenaAPIConst.COMMAND_DEL_CHILD_NS, {
+    return await _exec(ImenaAPIConst.COMMAND_DEL_CHILD_NS, {
       "authToken": this._authToken,
       "serviceCode": serviceCode,
       "host": host,
       "ip": ip
     });
-
-    return result;
   }
 
   /*
   * Editing the contact data of a domain name by serviceCode and contactType
   * */
   Future<bool> setContact(String serviceCode, String contactType, Map<String, String> contactData) async {
-    bool result = await _exec(ImenaAPIConst.COMMAND_UPD_CONTACT, {
+    return await _exec(ImenaAPIConst.COMMAND_UPD_CONTACT, {
       "authToken": this._authToken,
       "serviceCode": serviceCode,
       "contactType": contactType,
       "contact": contactData
     });
-
-    return result;
   }
 
   Future<bool> setPrivacy(serviceCode, [disclose = false]) async {
-    bool result = await _exec(ImenaAPIConst.COMMAND_SET_PRIVACY, {
+    return await _exec(ImenaAPIConst.COMMAND_SET_PRIVACY, {
       "authToken": this._authToken,
       "serviceCode": serviceCode,
       "whoisPrivacy": !disclose
     });
-
-    return result;
   }
 
   /*

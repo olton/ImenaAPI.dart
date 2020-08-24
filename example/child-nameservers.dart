@@ -22,11 +22,19 @@ void main() async {
 
   Debug.log("\nGet domain nameservers for $domainName...\n");
 
+  domain = await api.nameservers(serviceCode);
+  if (domain == Future.value(false)) {
+    Debug.log("\nCan't get domain!\n");
+    Debug.log(api.getError());
+    exit(0);
+  }
+  Debug.log(domain, "map", "Domain nameservers");
+
   domain = await api.childNameservers(serviceCode);
   if (domain == Future.value(false)) {
     Debug.log("\nCan't get domain!\n");
     Debug.log(api.getError());
     exit(0);
   }
-  Debug.log(domain, "map", "Domain info");
+  Debug.log(domain, "map", "Domain child nameservers");
 }
