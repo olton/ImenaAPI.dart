@@ -14,6 +14,7 @@ class ImenaAPI {
   String _authToken = null;
   String _login = "";
   String _password = "";
+  Map<String, dynamic> _info = {};
 
   ImenaAPI(this.endpoint) {}
 
@@ -76,6 +77,8 @@ class ImenaAPI {
 
     this._authToken = this.result['authToken'];
 
+    await tokenInfo();
+
     return true;
   }
 
@@ -99,6 +102,8 @@ class ImenaAPI {
     }
 
     this._authToken = this.result['authToken'];
+
+    await tokenInfo();
 
     return true;
   }
@@ -133,7 +138,13 @@ class ImenaAPI {
     bool result = await _exec(
         ImenaAPIConst.COMMAND_TOKEN_INFO, {"authToken": this._authToken});
 
+    this._info = result ? this.result : {};
+
     return !result ? false : this.result;
+  }
+
+  Map<String, dynamic> getInfo() {
+    return this._info;
   }
 
   /*
@@ -571,5 +582,38 @@ class ImenaAPI {
       });
     }
     return domainNames;
+  }
+
+  /*
+  * Get reseller clients
+  * */
+  Future<Map<String, dynamic>> clients(String resellerCode, [int limit = 500, int offset = 0]) async {
+    Map<String, dynamic> clientList = {};
+    bool result = await _exec(ImenaAPIConst.COMMAND_CLIENT_LIST, {
+      "authToken": this._authToken,
+      "resellerCode": resellerCode,
+      "limit": limit,
+      "offset": offset
+    });
+
+    if (result) {
+      this.result['list'].forEach((elem){
+        clientList.addAll({elem['clientName']: elem});
+      });
+    }
+
+    return clientList;
+  }
+
+  /*
+  * Get client info
+  * */
+  Future<dynamic> clientInfo(String clientCode) async {
+    bool result = await _exec(ImenaAPIConst.COMMAND_CLIENT_INFO, {
+      "authToken": this._authToken,
+      "clientCode": clientCode
+    });
+
+    return !result ? false : this.result;
   }
 }
