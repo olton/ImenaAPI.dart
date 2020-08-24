@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:imena/imena.dart';
@@ -8,7 +7,7 @@ void main() async {
   ImenaAPI api = new ImenaAPI(API_ENDPOINT);
 
   var result, balance;
-  const resellerCode = "DG3789";
+  const resellerCode = RESELLER_CODE;
 
   result = await api.login(API_LOGIN, API_PASSWORD);
 

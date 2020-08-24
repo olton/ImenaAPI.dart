@@ -7,8 +7,9 @@ void main() async {
   ImenaAPI api = new ImenaAPI(API_ENDPOINT);
 
   var result, domain;
-  const domainName = "pimenov.com.ua";
-  const serviceCode = "815633";
+  const domainName = ["pimenov"];
+  const zone = ["com", "net", "org"];
+  const resellerCode = RESELLER_CODE;
 
   result = await api.login(API_LOGIN, API_PASSWORD);
 
@@ -19,11 +20,11 @@ void main() async {
 
   Debug.log("\nLogin successful, authToken is: ${api.authToken()}");
 
-  Debug.log("\nGet domain nameservers for $domainName...\n");
+  Debug.log("\nPick domains for $domainName...\n");
 
-  domain = await api.nameservers(serviceCode);
+  domain = await api.pickDomain(resellerCode, domainName, zone);
   if (domain == Future.value(false)) {
-    Debug.log("\nCan't get domain!\n");
+    Debug.log("\nCan't get domain list or list empty!\n");
     Debug.log(api.getError());
     exit(0);
   }

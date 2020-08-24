@@ -51,4 +51,20 @@ class ImenaAPIConst {
 
   static const SECOND_AUTH_SMS = 'sms';
   static const SECOND_AUTH_GOOGLE = 'google';
+
+  static const ORDER_TYPE_ADD = 'add';
+  static const ORDER_TYPE_TRANSFER = 'transfer';
+
+  static const PAYMENT_TYPE_ADD = 'add';
+  static const PAYMENT_TYPE_TRANSFER = 'transfer';
+  static const PAYMENT_TYPE_RENEW = 'renew';
+
+  static const PICK_FILTER_ALL = 'all';
+  static const PICK_FILTER_AVAILABLE = 'available';
+  static const PICK_FILTER_UNAVAILABLE = 'unavailable';
+  static const PICK_FILTER_REGISTERED = 'registered';
+  static const PICK_FILTER_RESERVED = 'reserved';
+  static const PICK_FILTER_MIRRORED = 'mirrored';
+  static const PICK_FILTER_SALE = 'on_sale';
+  static const PICK_FILTER_UNKNOWN = 'unknown';
 }

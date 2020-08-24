@@ -167,7 +167,7 @@ class ImenaAPI {
   /*
   * Find domains by name
   * */
-  Future<dynamic> domainsBy([filter = ""]) async {
+  Future<dynamic> domainsBy([String filter = ""]) async {
     Map<String, dynamic> domainList = new Map();
     int limit = 500;
     int total = await domainsTotal();
@@ -202,7 +202,7 @@ class ImenaAPI {
   * Receiving the information on a domain name by service code
   * API command - getDomain
   * */
-  Future<dynamic> domainInfo(serviceCode) async {
+  Future<dynamic> domainInfo(String serviceCode) async {
     bool result = await _exec(ImenaAPIConst.COMMAND_DOMAIN_INFO, {
       "authToken": this._authToken,
       "serviceCode": serviceCode
@@ -215,7 +215,7 @@ class ImenaAPI {
   * Receiving the short information on a domain by domain name
   * API command - getDomainInfoByName
   * */
-  Future<dynamic> domainInfoShort(domainName) async {
+  Future<dynamic> domainInfoShort(String domainName) async {
     bool result = await _exec(ImenaAPIConst.COMMAND_DOMAIN_INFO_SHORT, {
       "authToken": this._authToken,
       "domainName": domainName
@@ -227,7 +227,7 @@ class ImenaAPI {
   /*
   * Get domain contacts by service code
   * */
-  Future<dynamic> contacts(serviceCode) async{
+  Future<dynamic> contacts(String serviceCode) async{
     Map<String, dynamic> contactList = {};
     dynamic result = await domainInfo(serviceCode);
 
@@ -243,7 +243,7 @@ class ImenaAPI {
   /*
   * Get domain tag list
   * */
-  Future<dynamic> tags(serviceCode) async{
+  Future<dynamic> tags(String serviceCode) async{
     dynamic result = await domainInfo(serviceCode);
 
     return result == Future.value(false) ? false : this.result['tagList'];
@@ -252,7 +252,7 @@ class ImenaAPI {
   /*
   * Get domain nameservers
   * */
-  Future<dynamic> nameservers(serviceCode) async{
+  Future<dynamic> nameservers(String serviceCode) async{
     dynamic result = await domainInfo(serviceCode);
 
     return result == Future.value(false) ? false : this.result['nameservers'];
@@ -261,7 +261,7 @@ class ImenaAPI {
   /*
   * Get domain child nameservers
   * */
-  Future<dynamic> childNameservers(serviceCode) async{
+  Future<dynamic> childNameservers(String serviceCode) async{
     dynamic result = await domainInfo(serviceCode);
 
     return result == Future.value(false) ? false : this.result['childNameservers'];
@@ -339,7 +339,7 @@ class ImenaAPI {
     });
   }
 
-  Future<bool> deleteChildNS(serviceCode, host, ip) async {
+  Future<bool> deleteChildNS(String serviceCode, String host, String ip) async {
     return await _exec(ImenaAPIConst.COMMAND_DEL_CHILD_NS, {
       "authToken": this._authToken,
       "serviceCode": serviceCode,
@@ -360,7 +360,7 @@ class ImenaAPI {
     });
   }
 
-  Future<bool> setPrivacy(serviceCode, [disclose = false]) async {
+  Future<bool> setPrivacy(String serviceCode, [bool disclose = false]) async {
     return await _exec(ImenaAPIConst.COMMAND_SET_PRIVACY, {
       "authToken": this._authToken,
       "serviceCode": serviceCode,
@@ -372,7 +372,7 @@ class ImenaAPI {
   * Get reseller balance info
   * API command - getResellerBalance
   * */
-  Future<dynamic> balanceInfo(resellerCode) async {
+  Future<dynamic> balanceInfo(String resellerCode) async {
     bool result = await _exec(ImenaAPIConst.COMMAND_RESELLER_BALANCE, {
       "authToken": this._authToken,
       "resellerCode": resellerCode
@@ -385,7 +385,7 @@ class ImenaAPI {
   * Get reseller balance
   * API command - getResellerBalance
   * */
-  Future<dynamic> balance(resellerCode) async {
+  Future<dynamic> balance(String resellerCode) async {
     dynamic result = await balanceInfo(resellerCode);
 
     return result == Future.value(false) ? false : this.result['balance'];
@@ -395,7 +395,7 @@ class ImenaAPI {
   * Get reseller credit
   * API command - getResellerBalance
   * */
-  Future<dynamic> credit(resellerCode) async {
+  Future<dynamic> credit(String resellerCode) async {
     dynamic result = await balanceInfo(resellerCode);
 
     return result == Future.value(false) ? false : this.result['creditLimit'];
@@ -445,5 +445,131 @@ class ImenaAPI {
     });
 
     return priceList;
+  }
+
+  /*
+  * Create order for domain - add, transfer
+  * API command - createDomainRegistrationOrder, createDomainTransferOrder
+  * For registration domain use orderType - ImenaAPIConst.ORDER_TYPE_ADD
+  * For transfer domain use orderType - ImenaAPIConst.ORDER_TYPE_TRANSFER
+  * */
+  Future<dynamic> order(String orderType, String clientCode, String domainName, [int term = 1, String aeroId = null, String ensAuthKey = null, String patentNumber = null, String patentDate = null, String nicD = null]) async {
+    String cmd = orderType == ImenaAPIConst.ORDER_TYPE_ADD ? ImenaAPIConst.COMMAND_CREATE_REGISTRATION_ORDER : ImenaAPIConst.COMMAND_CREATE_TRANSFER_ORDER;
+    Map<String, dynamic> params = {
+      "authToken": this._authToken,
+      "clientCode": clientCode,
+      "domainName": domainName,
+      "term": term
+    };
+
+    if (aeroId != null) {params.addAll({"aeroId": aeroId});}
+    if (ensAuthKey != null) {params.addAll({"ensAuthKey": ensAuthKey});}
+    if (patentNumber != null) {params.addAll({"patentNumber": patentNumber});}
+    if (patentDate != null) {params.addAll({"patentDate": patentDate});}
+    if (nicD != null) {params.addAll({"nicId": nicD});}
+
+    bool result = await _exec(cmd, params);
+
+    return !result ? false : this.result['serviceCode'];
+  }
+
+  /*
+  * Create payment for operation, before payment for add, transfer, you must create order
+  * ADD - paymentType = ImenaAPIConst.PAYMENT_TYPE_ADD
+  * RENEW - paymentType = ImenaAPIConst.PAYMENT_TYPE_RENEW
+  * TRANSFER - paymentType = ImenaAPIConst.PAYMENT_TYPE_TRANSFER
+  * */
+  Future<dynamic> payment(String paymentType, String serviceCode, [int term = 1]) async {
+    String cmd;
+
+    switch (paymentType) {
+      case ImenaAPIConst.PAYMENT_TYPE_ADD:
+        cmd = ImenaAPIConst.COMMAND_CREATE_REGISTRATION_PAYMENT;
+        break;
+      case ImenaAPIConst.PAYMENT_TYPE_TRANSFER:
+        cmd = ImenaAPIConst.COMMAND_CREATE_TRANSFER_PAYMENT;
+        break;
+      case ImenaAPIConst.PAYMENT_TYPE_RENEW:
+        cmd = ImenaAPIConst.COMMAND_CREATE_RENEW_PAYMENT;
+        break;
+    }
+
+    dynamic result = await _exec(cmd, {
+      "authToken": this._authToken,
+      "serviceCode": serviceCode,
+      "term": term
+    });
+
+    return result == Future.value(false) ? false : this.result['paymentId'];
+  }
+
+  /*
+  * Renew domain
+  * */
+  Future<dynamic> renew(String serviceCode, String stopDate, [int term = 1]) async {
+    return payment(ImenaAPIConst.PAYMENT_TYPE_RENEW, serviceCode, term);
+  }
+
+  /*
+  * Add domain
+  * */
+  Future<dynamic> add(String serviceCode, [int term = 1]) async {
+    return payment(ImenaAPIConst.PAYMENT_TYPE_ADD, serviceCode, term);
+  }
+
+  /*
+  * Transfer domain
+  * */
+  Future<dynamic> transfer(String serviceCode, [int term = 1]) async {
+    return payment(ImenaAPIConst.PAYMENT_TYPE_TRANSFER, serviceCode, term);
+  }
+
+  /*
+  * Get payment status
+  * */
+  Future<dynamic> paymentStatus(String paymentId) async {
+    bool result = await _exec(ImenaAPIConst.COMMAND_PAYMENT_STATUS, {
+      "authToken": this._authToken,
+      "paymentId": paymentId
+    });
+
+    return result == Future.value(false) ? false : this.result;
+  }
+
+  /*
+  * Delete unused orders
+  * */
+  Future<bool> deleteOrders(String serviceCode) async {
+    return await _exec(ImenaAPIConst.COMMAND_DELETE_ORDER, {
+      "authToken": this._authToken,
+      "serviceCode": serviceCode
+    });
+  }
+
+  /*
+  * Picks domain names for subsequent registration.
+  * */
+  Future<Map<String, dynamic>> pickDomain(String resellerCode, List<String> names, List<String> zones, [List<String> filter = const []]) async {
+    Map<String, dynamic> domainNames = {};
+    bool result = await _exec(ImenaAPIConst.COMMAND_PICK_DOMAIN, {
+      "authToken": this._authToken,
+      "resellerCode": resellerCode,
+      "names": names,
+      "domainTypes": zones
+    });
+    if (result) {
+      this.result.forEach((elem){
+        String name = '${elem['domainName']}';
+
+        if (filter.length == 0) {
+          domainNames.addAll({name: elem});
+        } else {
+          if (filter.contains(elem['domainNameStatus'])) {
+            domainNames.addAll({name: elem});
+          }
+        }
+      });
+    }
+    return domainNames;
   }
 }
