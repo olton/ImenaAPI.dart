@@ -57,6 +57,10 @@ class ImenaAPI {
     return this.result;
   }
 
+  /*
+  * Authentication of reseller's user
+  * API command - authenticateResellerUser
+  * */
   Future<bool> login(String login, String password) async {
     var result;
 
@@ -103,6 +107,10 @@ class ImenaAPI {
     return this._authToken;
   }
 
+  /*
+  * Invalidation of token (end of session)
+  * API command - invalidateAuthToken
+  * */
   Future<bool> logout() async {
     var result;
 
@@ -120,6 +128,10 @@ class ImenaAPI {
     return true;
   }
 
+  /*
+  * Receiving information about the current session and authenticated user by authToken
+  * API command - getAuthTokenInfo
+  * */
   Future<dynamic> tokenInfo() async {
     var result = await _exec(
         ImenaAPIConst.COMMAND_TOKEN_INFO, {"authToken": this._authToken});
@@ -127,6 +139,10 @@ class ImenaAPI {
     return !result ? false : this.result;
   }
 
+  /*
+  * Receiving the list of domain names accessible to the current user
+  * API command - getDomainsList
+  * */
   Future<Map<String, dynamic>> domains([int limit = 500, int offset = 0]) async {
     var result;
     Map<String, dynamic> domainList = {};
@@ -143,6 +159,9 @@ class ImenaAPI {
     return domainList;
   }
 
+  /*
+  * Get domains total on reseller account
+  * */
   Future<int> domainsTotal() async {
     var result;
 
@@ -152,6 +171,9 @@ class ImenaAPI {
     return !result ? 0 : this.result['total'];
   }
 
+  /*
+  * Find domains by name
+  * */
   Future<dynamic> domainsBy([filter = ""]) async {
     Map<String, dynamic> domainList = new Map();
     int limit = 500;
@@ -183,6 +205,10 @@ class ImenaAPI {
     return domainList;
   }
 
+  /*
+  * Receiving the information on a domain name by service code
+  * API command - getDomain
+  * */
   Future<dynamic> domainInfo(serviceCode) async {
     bool result = await _exec(ImenaAPIConst.COMMAND_DOMAIN_INFO, {
       "authToken": this._authToken,
@@ -192,6 +218,10 @@ class ImenaAPI {
     return !result ? false : this.result;
   }
 
+  /*
+  * Receiving the short information on a domain by domain name
+  * API command - getDomainInfoByName
+  * */
   Future<dynamic> domainInfoShort(domainName) async {
     bool result = await _exec(ImenaAPIConst.COMMAND_DOMAIN_INFO_SHORT, {
       "authToken": this._authToken,
@@ -201,6 +231,9 @@ class ImenaAPI {
     return !result ? false : this.result;
   }
 
+  /*
+  * Get domain contacts by service code
+  * */
   Future<dynamic> contacts(serviceCode) async{
     Map<String, dynamic> contactList = {};
     var result = await domainInfo(serviceCode);
@@ -214,21 +247,135 @@ class ImenaAPI {
     return contactList;
   }
 
+  /*
+  * Get domain tag list
+  * */
   Future<dynamic> tags(serviceCode) async{
     var result = await domainInfo(serviceCode);
 
     return result == Future.value(false) ? false : this.result['tagList'];
   }
 
+  /*
+  * Get domain nameservers
+  * */
   Future<dynamic> nameservers(serviceCode) async{
     var result = await domainInfo(serviceCode);
 
     return result == Future.value(false) ? false : this.result['nameservers'];
   }
 
+  /*
+  * Get domain child nameservers
+  * */
   Future<dynamic> childNameservers(serviceCode) async{
     var result = await domainInfo(serviceCode);
 
     return result == Future.value(false) ? false : this.result['childNameservers'];
+  }
+
+  /*
+  * Set domain nameservers
+  * API command - editDomainNameserversList
+  * */
+  Future<bool> setNS(String serviceCode, List<String> ns) async {
+    bool result = await _exec(ImenaAPIConst.COMMAND_SET_NS, {
+      "authToken": this._authToken,
+      "serviceCode": serviceCode,
+      "list": ns
+    });
+
+    return result;
+  }
+
+  /*
+  * Set preset nameservers for domain
+  * API command - setDomainNameserversToDefault, setDomainNameserversToMirohost, setDomainNameserversToDnshosting
+  * */
+  Future<bool> setNSPreset(String serviceCode, [String nsType = ImenaAPIConst.HOSTING_TYPE_DEFAULTS]) async {
+    String cmd;
+
+    switch (nsType) {
+      case ImenaAPIConst.HOSTING_TYPE_MIROHOST:
+        cmd = ImenaAPIConst.COMMAND_SET_NS_MIROHOST;
+        break;
+      case ImenaAPIConst.HOSTING_TYPE_DNS:
+        cmd = ImenaAPIConst.COMMAND_SET_NS_DNSHOSTING;
+        break;
+      default: cmd = ImenaAPIConst.COMMAND_SET_NS_DEFAULT;
+    }
+
+    bool result = await _exec(cmd, {
+      "authToken": this._authToken,
+      "serviceCode": serviceCode
+    });
+
+    return result;
+  }
+
+  /*
+  * Set preset nameservers for domain
+  * API command - setDomainNameserversToDefault
+  * */
+  Future<bool> setDefaultNS(String serviceCode) async {
+    bool result = await setNSPreset(serviceCode, ImenaAPIConst.HOSTING_TYPE_DEFAULTS);
+
+    return result;
+  }
+
+  /*
+  * Set preset nameservers for domain
+  * API command - setDomainNameserversToMirohost
+  * */
+  Future<bool> setMirohostNS(String serviceCode) async {
+    bool result = await setNSPreset(serviceCode, ImenaAPIConst.HOSTING_TYPE_MIROHOST);
+
+    return result;
+  }
+
+  /*
+  * Set preset nameservers for domain
+  * API command - setDomainNameserversToDnshosting
+  * */
+  Future<bool> setDnshostingNS(String serviceCode) async {
+    bool result = await setNSPreset(serviceCode, ImenaAPIConst.HOSTING_TYPE_DNS);
+
+    return result;
+  }
+
+  Future<bool> addChildNS(serviceCode, host, ip) async {
+    bool result = await _exec(ImenaAPIConst.COMMAND_ADD_CHILD_NS, {
+      "authToken": this._authToken,
+      "serviceCode": serviceCode,
+      "host": host,
+      "ip": ip
+    });
+
+    return result;
+  }
+
+  Future<bool> deleteChildNS(serviceCode, host, ip) async {
+    bool result = await _exec(ImenaAPIConst.COMMAND_DEL_CHILD_NS, {
+      "authToken": this._authToken,
+      "serviceCode": serviceCode,
+      "host": host,
+      "ip": ip
+    });
+
+    return result;
+  }
+
+  /*
+  * Editing the contact data of a domain name by serviceCode and contactType
+  * */
+  Future<bool> setContact(String serviceCode, String contactType, Map<String, String> contactData) async {
+    bool result = await _exec(ImenaAPIConst.COMMAND_UPD_CONTACT, {
+      "authToken": this._authToken,
+      "serviceCode": serviceCode,
+      "contactType": contactType,
+      "contact": contactData
+    });
+
+    return result;
   }
 }
