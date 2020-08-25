@@ -4,7 +4,7 @@ import 'package:imena/imena.dart';
 import 'auth.dart';
 
 void main() async {
-  ImenaAPI api = new ImenaAPI(API_ENDPOINT);
+  ImenaAPI api = ImenaAPI(API_ENDPOINT);
 
   var result, clients;
 

@@ -15,7 +15,7 @@ class ImenaAPI {
   String _password = "";
   Map<String, dynamic> _info = {};
 
-  ImenaAPI(this._endpoint) {}
+  ImenaAPI(this._endpoint);
 
   String get endpoint => this._endpoint;
   set endpoint(str) => this._endpoint = str;
@@ -30,7 +30,7 @@ class ImenaAPI {
     Map<String, String> requestHeader = {'Content-Type': 'application/json', 'X-ApiTransactionID': trID};
     Map<String, dynamic> requestBody = {"jsonrpc": "2.0", "id": trID, "method": cmd, "params": body};
 
-    response = await http.post(this._endpoint, headers: requestHeader, body: json.encode(requestBody));
+    response = await http.post(endpoint, headers: requestHeader, body: json.encode(requestBody));
 
     this.rawResponse = response.body;
     this.response = json.decode(response.body);

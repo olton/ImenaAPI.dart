@@ -3,7 +3,7 @@ import 'auth.dart';
 
 void main() async {
 
-  ImenaAPI api = new ImenaAPI(API_ENDPOINT);
+  ImenaAPI api = ImenaAPI(API_ENDPOINT);
 
   bool result = await api.login(API_LOGIN, API_PASSWORD);
 
