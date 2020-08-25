@@ -501,6 +501,30 @@ class ImenaAPI {
   }
 
   /*
+  * Get auth code for transfer
+  * */
+  Future<String> getAuthCode(String serviceCode) async {
+    bool result = await _exec(ImenaAPIConst.COMMAND_GET_AUTH_CODE, {
+      "authToken": this._authToken,
+      "serviceCode": serviceCode
+    });
+
+    return !result ? "" : this.result['authCode'];
+  }
+
+  /*
+  * Execute internal transfer (transfer from-to accounts inside imena)
+  * */
+  Future<bool> internal(String serviceCode, String authCode, String clientCode) async {
+    return await _exec(ImenaAPIConst.COMMAND_INTERNAL_TRANSFER, {
+      "authToken": this._authToken,
+      "serviceCode": serviceCode,
+      "clientCode": clientCode,
+      "authCode": authCode
+    });
+  }
+
+  /*
   * Picks domain names for subsequent registration.
   * */
   Future<Map<String, dynamic>> pickDomain(String resellerCode, List<String> names, List<String> zones, [List<String> filter = const []]) async {
