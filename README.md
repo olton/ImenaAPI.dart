@@ -17,12 +17,12 @@ This means that all methods that directly access the API implemented as Future (
 actual execution is available either in the `then()` call, or you must use `await` keyword before calling the method.
 Inside the class, the async / await methodology is used and below in the documentation, this approach will also be used.
 
-##### Create instance
+## Create instance
 ```dart
 ImenaAPI api = new ImenaAPI(API_ENDPOINT_URL);
 ```
 
-##### Login to server
+## Login to server
 Method implementation
 ```dart
 Future<bool> login(String login, String password) async {...}
@@ -39,7 +39,7 @@ if (!result) {
 }
 ```
 
-##### Login to server with second auth method
+## Login to server with second auth method
 Method implementation
 ```dart
 Future<bool> secondAuth(code, [type = ImenaAPIConst.SECOND_AUTH_SMS]) async {...}
@@ -71,7 +71,7 @@ if (!result) {
 }
 ```
 
-##### Get authToken after authentication
+## Get authToken after authentication
 To get `authToken` after successful authentication, you can use getter `authToken`.  
 Method implementation
 ```dart
@@ -89,7 +89,7 @@ if (!result) {
 }
 ```
 
-##### End of session 
+## End of session 
 To end active session, you must call method `logout()`.
 
 Method implementation
