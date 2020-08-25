@@ -85,9 +85,9 @@ class ImenaAPI {
     Map<String, dynamic> body = {"login": this._login, "password": this._password};
 
     if (type == ImenaAPIConst.SECOND_AUTH_SMS) {
-      body.addAll({"smsCode": code});
+      body["smsCode"] = code;
     } else {
-      body.addAll({"gaCode": code});
+      body["gaCode"] = code;
     }
 
     result = await _exec(ImenaAPIConst.COMMAND_LOGIN, body);
@@ -149,7 +149,7 @@ class ImenaAPI {
 
     if (result) {
       this.result['list'].forEach((elem) {
-        domainList.addAll({elem['domainName']: elem});
+        domainList[elem['domainName']] = elem;
       });
     }
 
@@ -190,7 +190,8 @@ class ImenaAPI {
       }
 
       result.forEach((key, val) {
-        if (key.contains(filter)) domainList.addAll({key: val});
+        if (key.contains(filter))
+          domainList[key] = val;
       });
     }
 
@@ -226,7 +227,7 @@ class ImenaAPI {
 
     if (result != Future.value(false)) {
       this.result['contacts'].forEach((elem) {
-        contactList.addAll({elem["contactType"]: elem});
+        contactList[elem["contactType"]] = elem;
       });
     }
 
@@ -377,7 +378,7 @@ class ImenaAPI {
 
     if (result) {
       this.result.forEach((elem) {
-        priceList.addAll({elem['domain']: elem});
+        priceList[elem['domain']] = elem;
       });
     }
 
@@ -403,7 +404,7 @@ class ImenaAPI {
 
     result.forEach((key, value) {
       if (domains.contains(key)) {
-        priceList.addAll({key: value});
+        priceList[key] = value;
       }
     });
 
@@ -422,19 +423,19 @@ class ImenaAPI {
     Map<String, dynamic> params = {"authToken": this._authToken, "clientCode": clientCode, "domainName": domainName, "term": term};
 
     if (aeroId != null) {
-      params.addAll({"aeroId": aeroId});
+      params["aeroId"] = aeroId;
     }
     if (ensAuthKey != null) {
-      params.addAll({"ensAuthKey": ensAuthKey});
+      params["ensAuthKey"] = ensAuthKey;
     }
     if (patentNumber != null) {
-      params.addAll({"patentNumber": patentNumber});
+      params["patentNumber"] = patentNumber;
     }
     if (patentDate != null) {
-      params.addAll({"patentDate": patentDate});
+      params["patentDate"] = patentDate;
     }
     if (nicD != null) {
-      params.addAll({"nicId": nicD});
+      params["nicId"] = nicD;
     }
 
     bool result = await _exec(cmd, params);
@@ -534,10 +535,10 @@ class ImenaAPI {
         String name = '${elem['domainName']}';
 
         if (filter.length == 0) {
-          domainNames.addAll({name: elem});
+          domainNames[name] = elem;
         } else {
           if (filter.contains(elem['domainNameStatus'])) {
-            domainNames.addAll({name: elem});
+            domainNames[name] = elem;
           }
         }
       });
@@ -555,7 +556,7 @@ class ImenaAPI {
 
     if (result) {
       this.result['list'].forEach((elem) {
-        clientList.addAll({elem['clientName']: elem});
+        clientList[elem['clientName']] = elem;
       });
     }
 
