@@ -168,7 +168,7 @@ class ImenaAPI {
   /*
   * Find domains by name
   * */
-  Future<dynamic> domainsBy([String filter = ""]) async {
+  Future<Map<String, dynamic>> domainsBy([String filter = ""]) async {
     Map<String, dynamic> domainList = new Map();
     int limit = 500;
     int total = await domainsTotal();
@@ -177,7 +177,7 @@ class ImenaAPI {
     Map<String, dynamic> result;
 
     if (total == 0) {
-      return false;
+      return domainList;
     }
 
     pages = (total / limit).ceil();

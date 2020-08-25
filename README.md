@@ -100,12 +100,89 @@ Example of usage
 ```dart
 ImenaAPI api = new ImenaAPI(API_ENDPOINT_URL);
 bool result = await api.login(API_LOGIN, API_PASSWORD);
-
 ...
-
 await api.logout();
 ```
  
+## Get Token/Reseller info 
+To get token info, you must call method `tokenInfo()`. This method calls automated when user successfully was logged.
+This method save data into private class variable `_info`. You can get this info with method `getInfo()`.
+Method `tokenInfo()` will return `false` or token data as `Map<String, dynamic>`. 
+
+Method implementation
+```dart
+Future<dynamic> tokenInfo() async {...}
+```
+Example of usage
+```dart
+ImenaAPI api = new ImenaAPI(API_ENDPOINT_URL);
+bool result = await api.login(API_LOGIN, API_PASSWORD);
+...
+dynamic token = await api.tokenInfo();
+if (token == Future.value(false)) {
+  print("\nCan't get token info!\n");
+} else {
+  print(token);
+}
+```
+ 
+## Get reseller domain list 
+To get domain list, you must call method `domains()`. This method return `Map<String, dynamic>`.
+
+Method implementation
+```dart
+Future<Map<String, dynamic>> domains([int limit = 500, int offset = 0]) async {...}
+```
+Example of usage
+```dart
+ImenaAPI api = new ImenaAPI(API_ENDPOINT_URL);
+bool result = await api.login(API_LOGIN, API_PASSWORD);
+...
+domains = await api.domains();
+if (domains.length == 0) {
+  print("\nCan't get domain list or list empty!\n");
+} else {
+  print(domains);
+}
+```
+ 
+## Get domains count on reseller account 
+To get domains count, you must call method `domainTotal()`.
+
+Method implementation
+```dart
+Future<int> domainsTotal() async {...}
+```
+Example of usage
+```dart
+ImenaAPI api = new ImenaAPI(API_ENDPOINT_URL);
+bool result = await api.login(API_LOGIN, API_PASSWORD);
+...
+int count = await domainsTotal();
+print("You have a ${count} domains on your account");
+```
+
+## Get domains by name 
+You can get domain list, filtered by part of name. To get filtered domains, you must call method `domainsBy()`.
+
+Method implementation
+```dart
+Future<dynamic> domainsBy([String filter = ""]) async {...}
+```
+Example of usage
+```dart
+ImenaAPI api = new ImenaAPI(API_ENDPOINT_URL);
+bool result = await api.login(API_LOGIN, API_PASSWORD);
+...
+Map<String, dynamic> domains = await api.domainsBy("part_of_domain_name");
+if (domains.length == 0) {
+  print("\nCan't get domain list or list empty!\n");
+} else {
+  print(domains);
+}
+```
+ 
+
 
 
 ---
