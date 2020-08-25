@@ -98,9 +98,6 @@ Future<bool> logout() async {...}
 ```
 Example of usage
 ```dart
-ImenaAPI api = new ImenaAPI(API_ENDPOINT_URL);
-bool result = await api.login(API_LOGIN, API_PASSWORD);
-...
 await api.logout();
 ```
  
@@ -115,10 +112,8 @@ Future<dynamic> tokenInfo() async {...}
 ```
 Example of usage
 ```dart
-ImenaAPI api = new ImenaAPI(API_ENDPOINT_URL);
-bool result = await api.login(API_LOGIN, API_PASSWORD);
-...
 dynamic token = await api.tokenInfo();
+
 if (token == Future.value(false)) {
   print("\nCan't get token info!\n");
 } else {
@@ -135,10 +130,8 @@ Future<Map<String, dynamic>> domains([int limit = 500, int offset = 0]) async {.
 ```
 Example of usage
 ```dart
-ImenaAPI api = new ImenaAPI(API_ENDPOINT_URL);
-bool result = await api.login(API_LOGIN, API_PASSWORD);
-...
-domains = await api.domains();
+Map<String, dynamic> domains = await api.domains();
+
 if (domains.length == 0) {
   print("\nCan't get domain list or list empty!\n");
 } else {
@@ -155,10 +148,8 @@ Future<int> domainsTotal() async {...}
 ```
 Example of usage
 ```dart
-ImenaAPI api = new ImenaAPI(API_ENDPOINT_URL);
-bool result = await api.login(API_LOGIN, API_PASSWORD);
-...
 int count = await domainsTotal();
+
 print("You have a ${count} domains on your account");
 ```
 
@@ -171,18 +162,14 @@ Future<dynamic> domainsBy([String filter = ""]) async {...}
 ```
 Example of usage
 ```dart
-ImenaAPI api = new ImenaAPI(API_ENDPOINT_URL);
-bool result = await api.login(API_LOGIN, API_PASSWORD);
-...
 Map<String, dynamic> domains = await api.domainsBy("part_of_domain_name");
+
 if (domains.length == 0) {
   print("\nCan't get domain list or list empty!\n");
 } else {
   print(domains);
 }
 ```
- 
-
 
 
 ---
