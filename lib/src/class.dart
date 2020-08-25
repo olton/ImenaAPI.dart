@@ -103,9 +103,7 @@ class ImenaAPI {
     return true;
   }
 
-  String authToken() {
-    return this._authToken;
-  }
+  String get authToken => this._authToken;
 
   /*
   * Invalidation of token (end of session)

@@ -17,7 +17,7 @@ void main() async {
     exit(0);
   }
 
-  Debug.log("\nLogin successful, authToken is: ${api.authToken()}");
+  Debug.log("\nLogin successful, authToken is: ${api.authToken}");
 
   Debug.log("\nSet ns to default for $domainName...\n");
 

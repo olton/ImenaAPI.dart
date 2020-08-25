@@ -16,7 +16,7 @@ void main() async {
     exit(0);
   }
 
-  Debug.log("\nLogin successful, authToken is: ${api.authToken()}");
+  Debug.log("\nLogin successful, authToken is: ${api.authToken}");
   Debug.log("Get reseller balance...\n");
 
   balance = await api.balanceInfo(resellerCode);

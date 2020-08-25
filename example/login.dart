@@ -5,14 +5,12 @@ void main() async {
 
   ImenaAPI api = new ImenaAPI(API_ENDPOINT);
 
-  var result;
-
-  result = await api.login(API_LOGIN, API_PASSWORD);
+  bool result = await api.login(API_LOGIN, API_PASSWORD);
 
   if (!result) {
     Debug.log("\nCan't login to API server!\n");
   } else {
-    Debug.log("\nLogin successful, authToken is: ${api.authToken()}");
+    Debug.log("\nLogin successful, authToken is: ${api.authToken}");
     Debug.log(api.getInfo(), "map", "Info");
   }
 

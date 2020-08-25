@@ -15,7 +15,7 @@ void main() async {
     exit(0);
   }
 
-  Debug.log("\nLogin successful, authToken is: ${api.authToken()}");
+  Debug.log("\nLogin successful, authToken is: ${api.authToken}");
 
   Debug.log("\nGet domains...\n");
 
