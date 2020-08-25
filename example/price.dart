@@ -35,7 +35,7 @@ void main() async {
 //  }
 //  Debug.log(price, "map", "Price list");
 
-  price = await api.priceDomains(resellerCode, ['one', 'press']);
+  price = await api.priceDomains(['one', 'press']);
   if (price.length == 0) {
     Debug.log("\nCan't get reseller price list or list empty!\n");
     Debug.log(api.getError());

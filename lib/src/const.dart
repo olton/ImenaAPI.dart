@@ -67,4 +67,12 @@ class ImenaAPIConst {
   static const PICK_FILTER_MIRRORED = 'mirrored';
   static const PICK_FILTER_SALE = 'on_sale';
   static const PICK_FILTER_UNKNOWN = 'unknown';
+
+  static const LANG_UA = 'ua';
+  static const LANG_RU = 'ru';
+  static const LANG_EN = 'en';
+
+  static const CLIENT_TYPE_INDIVIDUAL = 'individual';
+  static const CLIENT_TYPE_SOLE_PROPRIETOR = 'sole proprietor';
+  static const CLIENT_TYPE_LEGAL_ENTITY = 'legal entity';
 }

@@ -1,3 +1,9 @@
 name: imena
+version: 1.0.0
+description: Dart implementation for Imena.ua reseller API
+homepage: https://github.com/olton/ImenaAPI.dart
+repository: https://github.com/olton/ImenaAPI.dart
+issue_tracker: https://github.com/olton/ImenaAPI.dart/issues
+
 dependencies:
   http: ^0.12.2

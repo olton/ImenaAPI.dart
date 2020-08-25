@@ -18,7 +18,7 @@ void main() async {
   Debug.log("\nLogin successful, authToken is: ${api.authToken()}");
   Debug.log("Get client list...\n");
 
-  clients = await api.clients(api.getInfo()['user']['resellerCode']);
+  clients = await api.clients();
   if (clients.length == 0) {
     Debug.log("\nCan't get token info!\n");
     Debug.log(api.getError());

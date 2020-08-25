@@ -22,7 +22,7 @@ void main() async {
 
   Debug.log("\nPick domains for $domainName...\n");
 
-  domain = await api.pickDomain(resellerCode, domainName, zone);
+  domain = await api.pickDomain(domainName, zone);
   if (domain == Future.value(false)) {
     Debug.log("\nCan't get domain list or list empty!\n");
     Debug.log(api.getError());
