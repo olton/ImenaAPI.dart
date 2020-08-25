@@ -19,11 +19,11 @@ void main() async {
 
   Debug.log("\nGet domains by name...\n");
 
-  domains = await api.domainsBy("stoy");
+  domains = await api.domainsBy("");
   if (domains.length == 0) {
     Debug.log("\nCan't get domain list or list empty!\n");
     Debug.log(api.getError());
     exit(0);
   }
-  Debug.log(domains, "default", "Domains total");
+  Debug.log(domains, "map", "Domains total");
 }

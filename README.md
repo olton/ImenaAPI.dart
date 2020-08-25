@@ -154,7 +154,9 @@ print("You have a ${count} domains on your account");
 ```
 
 ## Get domains by name 
-You can get domain list, filtered by part of name. To get filtered domains, you must call method `domainsBy()`.
+You can get domain list, filtered by part of name. 
+To get filtered domains, you must call method `domainsBy()`. 
+If you pass `filter` argument, you get all domains on your account.
 
 Method definition
 ```dart
@@ -168,6 +170,45 @@ if (domains.length == 0) {
   print("\nCan't get domain list or list empty!\n");
 } else {
   print(domains);
+}
+```
+
+## Get domain info 
+To get domain info, use method `domainInfo()`. This method return `false` or `Map<String, dynamic>` with domain information.
+
+Method definition
+```dart
+Future<dynamic> domainInfo(String serviceCode) async {...}
+```
+Example of usage
+```dart
+dynamic info = await api.domainInfo("123456789");
+
+if (info == Future.value(false)) {
+  print("\nCan't get domain info!\n");
+} else {
+  print(info);
+}
+```
+
+## Get domain short info by name 
+To get domain info, use method `domainInfoShort()`. 
+This method return `false` or `Map<String, dynamic>` with domain information.
+This method return info for tha domain, if domain served on `imena.ua`.
+The method is useful if you need to perform an internal transfer between resellers `imena.ua` with method `internal()`.
+
+Method definition
+```dart
+Future<dynamic> domainInfoShort(String domainName) async {...}
+```
+Example of usage
+```dart
+dynamic info = await api.domainInfoShort("imena.ua");
+
+if (info == Future.value(false)) {
+  print("\nCan't get domain info!\n");
+} else {
+  print(info);
 }
 ```
 

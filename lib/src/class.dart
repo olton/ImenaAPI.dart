@@ -186,7 +186,6 @@ class ImenaAPI {
       result = await domains(limit, limit * i);
 
       if (i == 0 && result.length == 0) {
-        print("empty");
         return domainList;
       }
 
