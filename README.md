@@ -23,7 +23,7 @@ ImenaAPI api = new ImenaAPI(API_ENDPOINT_URL);
 ```
 
 ## Login to server
-Method implementation
+Method definition
 ```dart
 Future<bool> login(String login, String password) async {...}
 ```
@@ -40,7 +40,7 @@ if (!result) {
 ```
 
 ## Login to server with second auth method
-Method implementation
+Method definition
 ```dart
 Future<bool> secondAuth(code, [type = ImenaAPIConst.SECOND_AUTH_SMS]) async {...}
 ```
@@ -73,7 +73,7 @@ if (!result) {
 
 ## Get authToken after authentication
 To get `authToken` after successful authentication, you can use getter `authToken`.  
-Method implementation
+Method definition
 ```dart
 String get authToken => this._authToken;
 ```
@@ -92,7 +92,7 @@ if (!result) {
 ## End of session 
 To end active session, you must call method `logout()`.
 
-Method implementation
+Method definition
 ```dart
 Future<bool> logout() async {...}
 ```
@@ -106,7 +106,7 @@ To get token info, you must call method `tokenInfo()`. This method calls automat
 This method save data into private class variable `_info`. You can get this info with method `getInfo()`.
 Method `tokenInfo()` will return `false` or token data as `Map<String, dynamic>`. 
 
-Method implementation
+Method definition
 ```dart
 Future<dynamic> tokenInfo() async {...}
 ```
@@ -124,7 +124,7 @@ if (token == Future.value(false)) {
 ## Get reseller domain list 
 To get domain list, you must call method `domains()`. This method return `Map<String, dynamic>`.
 
-Method implementation
+Method definition
 ```dart
 Future<Map<String, dynamic>> domains([int limit = 500, int offset = 0]) async {...}
 ```
@@ -142,7 +142,7 @@ if (domains.length == 0) {
 ## Get domains count on reseller account 
 To get domains count, you must call method `domainTotal()`.
 
-Method implementation
+Method definition
 ```dart
 Future<int> domainsTotal() async {...}
 ```
@@ -156,7 +156,7 @@ print("You have a ${count} domains on your account");
 ## Get domains by name 
 You can get domain list, filtered by part of name. To get filtered domains, you must call method `domainsBy()`.
 
-Method implementation
+Method definition
 ```dart
 Future<dynamic> domainsBy([String filter = ""]) async {...}
 ```
