@@ -314,10 +314,16 @@ class ImenaAPI {
     return await setNSPreset(serviceCode, ImenaAPIConst.HOSTING_TYPE_DNS);
   }
 
-  Future<bool> addChildNS(serviceCode, host, ip) async {
+  /*
+  * Add child nameserver
+  * */
+  Future<bool> addChildNS(String serviceCode, String host, String ip) async {
     return await _exec(ImenaAPIConst.COMMAND_ADD_CHILD_NS, {"authToken": this._authToken, "serviceCode": serviceCode, "host": host, "ip": ip});
   }
 
+  /*
+  * Delete child nameserver
+  * */
   Future<bool> deleteChildNS(String serviceCode, String host, String ip) async {
     return await _exec(ImenaAPIConst.COMMAND_DEL_CHILD_NS, {"authToken": this._authToken, "serviceCode": serviceCode, "host": host, "ip": ip});
   }

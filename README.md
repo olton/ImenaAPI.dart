@@ -309,6 +309,49 @@ if (!api.success) {
 }
 ```
 
+## Set default domain nameservers 
+
+You can set default nameservers to:
+- default, with constant `ImenaAPIConst.HOSTING_TYPE_DEFAULTS`; 
+- to mirohost NS, with constant `ImenaAPIConst.HOSTING_TYPE_MIROHOST`; 
+- to dnshosting NS, with constant `ImenaAPIConst.HOSTING_TYPE_DNS`; 
+
+Method definition
+```dart
+Future<bool> setNSPreset(String serviceCode, [String nsType = ImenaAPIConst.HOSTING_TYPE_DEFAULTS]) async {...}
+```
+Example of usage
+```dart
+await api.setNSPreset(serviceCode, ImenaAPIConst.HOSTING_TYPE_DEFAULTS);
+
+if (!api.success) {
+  print("\nCan't set domain ns!\n");
+} else {
+  print("\nDomain ns changed!\n");
+}
+```
+
+## Set specified default domain nameservers 
+
+You can set specified default nameservers. 
+
+Method definition
+```dart
+Future<bool> setDefaultNS(String serviceCode) async {...}
+Future<bool> setMirohostNS(String serviceCode) async {...}
+Future<bool> setDnshostingNS(String serviceCode) async {...}
+```
+Example of usage
+```dart
+await api.setDefaultNS(serviceCode);
+
+if (!api.success) {
+  print("\nCan't set domain ns!\n");
+} else {
+  print("\nDomain ns changed!\n");
+}
+```
+
 
 ---
 
