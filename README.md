@@ -25,10 +25,11 @@ ImenaAPI api = ImenaAPI(API_ENDPOINT_URL);
 ## Check command complete successful
 To check command complete successful, you must use property `success`.
 ```dart
-await api.method(...);
+var result = await api.method(...);
 
 if (api.success) {
   // Command complete successful
+  print(result);
 } else {
   // Check error details with method getError()
   print(api.getError());
