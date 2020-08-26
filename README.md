@@ -225,6 +225,76 @@ if (!api.success) {
 }
 ```
 
+## Get domain tagList 
+
+Method definition
+```dart
+Future<List<dynamic>> tags(String serviceCode) async {...}
+```
+Example of usage
+```dart
+List<dynamic> tags = await api.tags(serviceCode);
+
+if (!api.success) {
+  print("\nCan't get domain contacts!\n");
+} else {
+  print(tags);
+}
+```
+
+## Get domain nameservers 
+
+Method definition
+```dart
+Future<List<dynamic>> nameservers(String serviceCode) async {...}
+```
+Example of usage
+```dart
+List<dynamic> nameservers = await api.nameservers(serviceCode);
+
+if (!api.success) {
+  print("\nCan't get domain contacts!\n");
+} else {
+  print(nameservers);
+}
+```
+
+## Get domain child nameservers 
+
+Method definition
+```dart
+Future<List<dynamic>> childNameservers(String serviceCode) async {...}
+```
+Example of usage
+```dart
+List<dynamic> nameservers = await api.childNameservers(serviceCode);
+
+if (!api.success) {
+  print("\nCan't get domain contacts!\n");
+} else {
+  print(nameservers);
+}
+```
+
+
+## Set domain nameservers 
+
+Method definition
+```dart
+Future<bool> setNS(String serviceCode, List<String> ns) async {...}
+```
+Example of usage
+```dart
+List<String> ns = const ['ns1.com', 'ns2.com', 'ns3.com'];
+await api.setNS(serviceCode, ns);
+
+if (!api.success) {
+  print("\nCan't set domain ns!\n");
+} else {
+  print("\nDomain ns changed!\n");
+}
+```
+
 
 ---
 
