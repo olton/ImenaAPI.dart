@@ -22,6 +22,19 @@ Inside the class, the async / await methodology is used and below in the documen
 ImenaAPI api = ImenaAPI(API_ENDPOINT_URL);
 ```
 
+## Check command complete successful
+To check command complete successful, you must use property `success`.
+```dart
+await api.method(...);
+
+if (api.success) {
+  // Command complete successful
+} else {
+  // Check error details with method getError()
+  print(api.getError());
+}
+```
+
 ## Login to server
 Method definition
 ```dart
