@@ -352,6 +352,29 @@ if (!api.success) {
 }
 ```
 
+## Add and delete child name servers
+## Set contact for domain
+## Set privacy protection
+## Get reseller balance info
+## Get reseller balance
+## Get reseller credit
+## Get reseller prices
+## Get reseller prices for specified domain
+## Get reseller prices for specified domains
+## Create an order to get a domain for serving (registration, transfer)
+## Create payment for operation with domain name
+## Create payment for registration
+## Create payment for renew
+## Create payment for transfer
+## Get payment status
+## Delete unused orders
+## get domain auth-code for outside transfer
+## Internal transfer between imena clients
+## Pick domain names
+## Get reseller client list
+## Get reseller client info
+## Create client
+
 
 ---
 
