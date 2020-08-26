@@ -14,6 +14,7 @@ class ImenaAPI {
   String _login = "";
   String _password = "";
   Map<String, dynamic> _info = {};
+  bool success = false;
 
   ImenaAPI(this._endpoint);
 
@@ -25,20 +26,23 @@ class ImenaAPI {
   }
 
   Future<bool> _exec(cmd, [body = ""]) async {
-    http.Response response;
     String trID = this._transactionID();
     Map<String, String> requestHeader = {'Content-Type': 'application/json', 'X-ApiTransactionID': trID};
     Map<String, dynamic> requestBody = {"jsonrpc": "2.0", "id": trID, "method": cmd, "params": body};
 
-    response = await http.post(endpoint, headers: requestHeader, body: json.encode(requestBody));
+    success = false;
 
-    this.rawResponse = response.body;
-    this.response = json.decode(response.body);
+    http.Response httpResponse = await http.post(endpoint, headers: requestHeader, body: json.encode(requestBody));
 
-    this.error = this.response['error'];
-    this.result = this.response['result'];
+    rawResponse = httpResponse.body;
+    response = json.decode(httpResponse.body);
 
-    return this.error == null;
+    error = response['error'];
+    result = response['result'];
+
+    success = this.error == null;
+
+    return success;
   }
 
   dynamic getError() {
@@ -65,18 +69,16 @@ class ImenaAPI {
   * API command - authenticateResellerUser
   * */
   Future<bool> login(String login, String password) async {
-    bool result;
-
     this._login = login;
     this._password = password;
 
-    result = await _exec(ImenaAPIConst.COMMAND_LOGIN, {"login": this._login, "password": this._password});
+    await _exec(ImenaAPIConst.COMMAND_LOGIN, {"login": this._login, "password": this._password});
 
-    if (!result) {
+    if (!success) {
       return false;
     }
 
-    this._authToken = this.result['authToken'];
+    _authToken = result['authToken'];
 
     await tokenInfo();
 
@@ -84,7 +86,6 @@ class ImenaAPI {
   }
 
   Future<bool> secondAuth(code, [type = ImenaAPIConst.SECOND_AUTH_SMS]) async {
-    bool result;
     Map<String, dynamic> body = {"login": this._login, "password": this._password};
 
     if (type == ImenaAPIConst.SECOND_AUTH_SMS) {
@@ -93,9 +94,9 @@ class ImenaAPI {
       body["gaCode"] = code;
     }
 
-    result = await _exec(ImenaAPIConst.COMMAND_LOGIN, body);
+    await _exec(ImenaAPIConst.COMMAND_LOGIN, body);
 
-    if (!result) {
+    if (!success) {
       return false;
     }
 
@@ -113,15 +114,16 @@ class ImenaAPI {
   * API command - invalidateAuthToken
   * */
   Future<bool> logout() async {
-    bool result = await _exec(ImenaAPIConst.COMMAND_LOGOUT, {"authToken": this._authToken});
+    await _exec(ImenaAPIConst.COMMAND_LOGOUT, {"authToken": this._authToken});
 
-    if (!result) {
+    if (!success) {
       return false;
     }
 
-    this._login = '';
-    this._password = '';
-    this._authToken = '';
+    this._login = null;
+    this._password = null;
+    this._authToken = null;
+    this._info = null;
 
     return true;
   }
@@ -131,11 +133,9 @@ class ImenaAPI {
   * API command - getAuthTokenInfo
   * */
   Future<dynamic> tokenInfo() async {
-    bool result = await _exec(ImenaAPIConst.COMMAND_TOKEN_INFO, {"authToken": this._authToken});
-
-    this._info = result ? this.result : {};
-
-    return !result ? false : this.result;
+    await _exec(ImenaAPIConst.COMMAND_TOKEN_INFO, {"authToken": this._authToken});
+    this._info = success ? this.result : {};
+    return !success ? {} : this.result;
   }
 
   Map<String, dynamic> getInfo() {
@@ -148,9 +148,10 @@ class ImenaAPI {
   * */
   Future<Map<String, dynamic>> domains([int limit = 500, int offset = 0]) async {
     Map<String, dynamic> domainList = {};
-    bool result = await _exec(ImenaAPIConst.COMMAND_DOMAINS_LIST, {"authToken": this._authToken, "limit": limit, "offset": offset});
 
-    if (result) {
+    await _exec(ImenaAPIConst.COMMAND_DOMAINS_LIST, {"authToken": this._authToken, "limit": limit, "offset": offset});
+
+    if (success) {
       this.result['list'].forEach((elem) {
         domainList[elem['domainName']] = elem;
       });
@@ -163,9 +164,8 @@ class ImenaAPI {
   * Get domains total on reseller account
   * */
   Future<int> domainsTotal() async {
-    bool result = await _exec(ImenaAPIConst.COMMAND_DOMAINS_LIST, {"authToken": this._authToken, "limit": 1, "offset": 0});
-
-    return !result ? 0 : this.result['total'];
+    await _exec(ImenaAPIConst.COMMAND_DOMAINS_LIST, {"authToken": this._authToken, "limit": 1, "offset": 0});
+    return !success ? 0 : result['total'];
   }
 
   /*
@@ -205,20 +205,18 @@ class ImenaAPI {
   * Receiving the information on a domain name by service code
   * API command - getDomain
   * */
-  Future<dynamic> domainInfo(String serviceCode) async {
-    bool result = await _exec(ImenaAPIConst.COMMAND_DOMAIN_INFO, {"authToken": this._authToken, "serviceCode": serviceCode});
-
-    return !result ? false : this.result;
+  Future<Map<String, dynamic>> domainInfo(String serviceCode) async {
+    await _exec(ImenaAPIConst.COMMAND_DOMAIN_INFO, {"authToken": this._authToken, "serviceCode": serviceCode});
+    return !success ? {} : result;
   }
 
   /*
   * Receiving the short information on a domain by domain name
   * API command - getDomainInfoByName
   * */
-  Future<dynamic> domainInfoShort(String domainName) async {
-    bool result = await _exec(ImenaAPIConst.COMMAND_DOMAIN_INFO_SHORT, {"authToken": this._authToken, "domainName": domainName});
-
-    return !result ? false : this.result;
+  Future<Map<String, dynamic>> domainInfoShort(String domainName) async {
+    await _exec(ImenaAPIConst.COMMAND_DOMAIN_INFO_SHORT, {"authToken": this._authToken, "domainName": domainName});
+    return !success ? {} : this.result;
   }
 
   /*
@@ -226,10 +224,11 @@ class ImenaAPI {
   * */
   Future<dynamic> contacts(String serviceCode) async {
     Map<String, dynamic> contactList = {};
-    dynamic result = await domainInfo(serviceCode);
 
-    if (result != Future.value(false)) {
-      this.result['contacts'].forEach((elem) {
+    await domainInfo(serviceCode);
+
+    if (success) {
+      result['contacts'].forEach((elem) {
         contactList[elem["contactType"]] = elem;
       });
     }
@@ -240,28 +239,25 @@ class ImenaAPI {
   /*
   * Get domain tag list
   * */
-  Future<dynamic> tags(String serviceCode) async {
-    dynamic result = await domainInfo(serviceCode);
-
-    return result == Future.value(false) ? false : this.result['tagList'];
+  Future<List<dynamic>> tags(String serviceCode) async {
+    await domainInfo(serviceCode);
+    return !success ? [] : this.result['tagList'];
   }
 
   /*
   * Get domain nameservers
   * */
-  Future<dynamic> nameservers(String serviceCode) async {
-    dynamic result = await domainInfo(serviceCode);
-
-    return result == Future.value(false) ? false : this.result['nameservers'];
+  Future<List<dynamic>> nameservers(String serviceCode) async {
+    await domainInfo(serviceCode);
+    return !success ? [] : this.result['nameservers'];
   }
 
   /*
   * Get domain child nameservers
   * */
-  Future<dynamic> childNameservers(String serviceCode) async {
-    dynamic result = await domainInfo(serviceCode);
-
-    return result == Future.value(false) ? false : this.result['childNameservers'];
+  Future<List<dynamic>> childNameservers(String serviceCode) async {
+    await domainInfo(serviceCode);
+    return !success ? [] : this.result['childNameservers'];
   }
 
   /*
@@ -269,9 +265,8 @@ class ImenaAPI {
   * API command - editDomainNameserversList
   * */
   Future<bool> setNS(String serviceCode, List<String> ns) async {
-    bool result = await _exec(ImenaAPIConst.COMMAND_SET_NS, {"authToken": this._authToken, "serviceCode": serviceCode, "list": ns});
-
-    return result;
+    await _exec(ImenaAPIConst.COMMAND_SET_NS, {"authToken": this._authToken, "serviceCode": serviceCode, "list": ns});
+    return success;
   }
 
   /*
@@ -292,9 +287,7 @@ class ImenaAPI {
         cmd = ImenaAPIConst.COMMAND_SET_NS_DEFAULT;
     }
 
-    bool result = await _exec(cmd, {"authToken": this._authToken, "serviceCode": serviceCode});
-
-    return result;
+    return await _exec(cmd, {"authToken": this._authToken, "serviceCode": serviceCode});
   }
 
   /*
@@ -345,10 +338,9 @@ class ImenaAPI {
   * Get reseller balance info
   * API command - getResellerBalance
   * */
-  Future<dynamic> balanceInfo([String resellerCode = null]) async {
-    bool result = await _exec(ImenaAPIConst.COMMAND_RESELLER_BALANCE, {"authToken": this._authToken, "resellerCode": getResellerCode(resellerCode)});
-
-    return !result ? false : this.result;
+  Future<Map<String, dynamic>> balanceInfo([String resellerCode = null]) async {
+    await _exec(ImenaAPIConst.COMMAND_RESELLER_BALANCE, {"authToken": this._authToken, "resellerCode": getResellerCode(resellerCode)});
+    return !success ? {} : this.result;
   }
 
   /*
@@ -356,9 +348,8 @@ class ImenaAPI {
   * API command - getResellerBalance
   * */
   Future<dynamic> balance([String resellerCode = null]) async {
-    dynamic result = await balanceInfo(resellerCode);
-
-    return result == Future.value(false) ? false : this.result['balance'];
+    await balanceInfo(resellerCode);
+    return !success ? 0 : this.result['balance'];
   }
 
   /*
@@ -366,9 +357,8 @@ class ImenaAPI {
   * API command - getResellerBalance
   * */
   Future<dynamic> credit([String resellerCode = null]) async {
-    dynamic result = await balanceInfo(resellerCode);
-
-    return result == Future.value(false) ? false : this.result['creditLimit'];
+    await balanceInfo(resellerCode);
+    return !success ? 0 : this.result['creditLimit'];
   }
 
   /*
@@ -377,10 +367,10 @@ class ImenaAPI {
   * */
   Future<Map<String, dynamic>> price([String resellerCode = null]) async {
     Map<String, dynamic> priceList = {};
-    bool result = await _exec(ImenaAPIConst.COMMAND_RESELLER_PRICES, {"authToken": this._authToken, "resellerCode": getResellerCode(resellerCode)});
+    await _exec(ImenaAPIConst.COMMAND_RESELLER_PRICES, {"authToken": this._authToken, "resellerCode": getResellerCode(resellerCode)});
 
-    if (result) {
-      this.result.forEach((elem) {
+    if (success) {
+      result.forEach((elem) {
         priceList[elem['domain']] = elem;
       });
     }
@@ -441,9 +431,9 @@ class ImenaAPI {
       params["nicId"] = nicD;
     }
 
-    bool result = await _exec(cmd, params);
+    await _exec(cmd, params);
 
-    return !result ? false : this.result['serviceCode'];
+    return !success ? -1 : this.result['serviceCode'];
   }
 
   /*
@@ -467,9 +457,9 @@ class ImenaAPI {
         break;
     }
 
-    dynamic result = await _exec(cmd, {"authToken": this._authToken, "serviceCode": serviceCode, "term": term});
+    await _exec(cmd, {"authToken": this._authToken, "serviceCode": serviceCode, "term": term});
 
-    return result == Future.value(false) ? false : this.result['paymentId'];
+    return !success ? -1 : this.result['paymentId'];
   }
 
   /*
@@ -496,10 +486,9 @@ class ImenaAPI {
   /*
   * Get payment status
   * */
-  Future<dynamic> paymentStatus(String paymentId) async {
-    bool result = await _exec(ImenaAPIConst.COMMAND_PAYMENT_STATUS, {"authToken": this._authToken, "paymentId": paymentId});
-
-    return result == Future.value(false) ? false : this.result;
+  Future<Map<String, dynamic>> paymentStatus(String paymentId) async {
+    await _exec(ImenaAPIConst.COMMAND_PAYMENT_STATUS, {"authToken": this._authToken, "paymentId": paymentId});
+    return !success ? {} : this.result;
   }
 
   /*
@@ -513,9 +502,8 @@ class ImenaAPI {
   * Get auth code for transfer
   * */
   Future<String> getAuthCode(String serviceCode) async {
-    bool result = await _exec(ImenaAPIConst.COMMAND_GET_AUTH_CODE, {"authToken": this._authToken, "serviceCode": serviceCode});
-
-    return !result ? "" : this.result['authCode'];
+    await _exec(ImenaAPIConst.COMMAND_GET_AUTH_CODE, {"authToken": this._authToken, "serviceCode": serviceCode});
+    return !success ? "" : this.result['authCode'];
   }
 
   /*
@@ -531,10 +519,9 @@ class ImenaAPI {
   * */
   Future<Map<String, dynamic>> pickDomain(List<String> names, List<String> zones, {List<String> filter = const [], String resellerCode = null}) async {
     Map<String, dynamic> domainNames = {};
-    bool result =
-        await _exec(ImenaAPIConst.COMMAND_PICK_DOMAIN, {"authToken": this._authToken, "resellerCode": getResellerCode(resellerCode), "names": names, "domainTypes": zones});
-    if (result) {
-      this.result.forEach((elem) {
+    await _exec(ImenaAPIConst.COMMAND_PICK_DOMAIN, {"authToken": this._authToken, "resellerCode": getResellerCode(resellerCode), "names": names, "domainTypes": zones});
+    if (success) {
+      result.forEach((elem) {
         String name = '${elem['domainName']}';
 
         if (filter.length == 0) {
@@ -554,11 +541,10 @@ class ImenaAPI {
   * */
   Future<Map<String, dynamic>> clients([int limit = 500, int offset = 0, String resellerCode = null]) async {
     Map<String, dynamic> clientList = {};
-    bool result =
-        await _exec(ImenaAPIConst.COMMAND_CLIENT_LIST, {"authToken": this._authToken, "resellerCode": getResellerCode(resellerCode), "limit": limit, "offset": offset});
+    await _exec(ImenaAPIConst.COMMAND_CLIENT_LIST, {"authToken": this._authToken, "resellerCode": getResellerCode(resellerCode), "limit": limit, "offset": offset});
 
-    if (result) {
-      this.result['list'].forEach((elem) {
+    if (success) {
+      result['list'].forEach((elem) {
         clientList[elem['clientName']] = elem;
       });
     }
@@ -570,9 +556,8 @@ class ImenaAPI {
   * Get client info
   * */
   Future<dynamic> clientInfo(String clientCode) async {
-    bool result = await _exec(ImenaAPIConst.COMMAND_CLIENT_INFO, {"authToken": this._authToken, "clientCode": clientCode});
-
-    return !result ? false : this.result;
+    await _exec(ImenaAPIConst.COMMAND_CLIENT_INFO, {"authToken": this._authToken, "clientCode": clientCode});
+    return !success ? {} : this.result;
   }
 
   /*
@@ -580,7 +565,8 @@ class ImenaAPI {
   * */
   Future<dynamic> createClient(String firstName, String middleName, String lastName, String msgLanguage, String clientType,
       bool isUaResident, Map<String, dynamic> contactData, Map<String, dynamic> legalData, [String resellerCode = null]) async {
-    bool result = await _exec(ImenaAPIConst.COMMAND_CREATE_CLIENT, {
+
+    await _exec(ImenaAPIConst.COMMAND_CREATE_CLIENT, {
       "authToken": this._authToken,
       "resellerCode": getResellerCode(resellerCode),
       "firstName": firstName,
@@ -593,6 +579,6 @@ class ImenaAPI {
       "legalData": legalData
     });
 
-    return !result ? false : this.result["clientCode"];
+    return !success ? -1 : this.result["clientCode"];
   }
 }

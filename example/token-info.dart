@@ -19,7 +19,7 @@ void main() async {
   Debug.log("Get token info...\n");
 
   token = await api.tokenInfo();
-  if (token == Future.value(false)) {
+  if (!api.success) {
     Debug.log("\nCan't get token info!\n");
     Debug.log(api.getError());
     exit(0);

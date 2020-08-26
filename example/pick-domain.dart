@@ -9,7 +9,6 @@ void main() async {
   var result, domain;
   const domainName = ["pimenov"];
   const zone = ["com", "net", "org"];
-  const resellerCode = RESELLER_CODE;
 
   result = await api.login(API_LOGIN, API_PASSWORD);
 
@@ -23,7 +22,7 @@ void main() async {
   Debug.log("\nPick domains for $domainName...\n");
 
   domain = await api.pickDomain(domainName, zone);
-  if (domain == Future.value(false)) {
+  if (!api.success) {
     Debug.log("\nCan't get domain list or list empty!\n");
     Debug.log(api.getError());
     exit(0);

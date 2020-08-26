@@ -19,7 +19,7 @@ void main() async {
   Debug.log("Get client list...\n");
 
   clients = await api.clients();
-  if (clients.length == 0) {
+  if (!api.success) {
     Debug.log("\nCan't get token info!\n");
     Debug.log(api.getError());
     exit(0);

@@ -6,9 +6,10 @@ import 'auth.dart';
 void main() async {
   ImenaAPI api = ImenaAPI(API_ENDPOINT);
 
-  var result, domain;
+  var result;
+  dynamic domain;
   const domainName = "pimenov.com.ua";
-  const serviceCode = "815633";
+  const serviceCode = SERVICE_CODE;
 
   result = await api.login(API_LOGIN, API_PASSWORD);
 
@@ -22,7 +23,11 @@ void main() async {
   Debug.log("\nGet domain contacts for $domainName...\n");
 
   domain = await api.contacts(serviceCode);
-  if (domain == Future.value(false)) {
+
+  print(domain.runtimeType);
+  print(Future.value(false).runtimeType);
+
+  if (!api.success) {
     Debug.log("\nCan't get domain!\n");
     Debug.log(api.getError());
     exit(0);

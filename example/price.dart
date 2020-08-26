@@ -7,7 +7,6 @@ void main() async {
   ImenaAPI api = ImenaAPI(API_ENDPOINT);
 
   var result, price;
-  const resellerCode = RESELLER_CODE;
 
   result = await api.login(API_LOGIN, API_PASSWORD);
 
@@ -20,7 +19,7 @@ void main() async {
   Debug.log("Get reseller balance...\n");
 
   price = await api.price();
-  if (price.length == 0) {
+  if (!api.success) {
     Debug.log("\nCan't get reseller price list or list empty!\n");
     Debug.log(api.getError());
     exit(0);
@@ -28,7 +27,7 @@ void main() async {
   Debug.log(price, "map", "Price list");
 
   price = await api.priceDomain('one');
-  if (price.length == 0) {
+  if (!api.success) {
     Debug.log("\nCan't get reseller price list or list empty!\n");
     Debug.log(api.getError());
     exit(0);
@@ -36,7 +35,7 @@ void main() async {
   Debug.log(price, "map", "Price list");
 
   price = await api.priceDomains(['one', 'press']);
-  if (price.length == 0) {
+  if (!api.success) {
     Debug.log("\nCan't get reseller price list or list empty!\n");
     Debug.log(api.getError());
     exit(0);

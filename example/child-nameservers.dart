@@ -8,7 +8,7 @@ void main() async {
 
   var result, domain;
   const domainName = "pimenov.com.ua";
-  const serviceCode = "815633";
+  const serviceCode = SERVICE_CODE;
 
   result = await api.login(API_LOGIN, API_PASSWORD);
 

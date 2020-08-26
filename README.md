@@ -212,6 +212,24 @@ if (info == Future.value(false)) {
 }
 ```
 
+## Get domain contacts 
+To get domain info, use method `contacts()`. 
+
+Method definition
+```dart
+Future<Map<String, dynamic>> contacts(String serviceCode) async {...}
+```
+Example of usage
+```dart
+dynamic info = await api.domainInfoShort("imena.ua");
+
+if (info == Future.value(false)) {
+  print("\nCan't get domain info!\n");
+} else {
+  print(info);
+}
+```
+
 
 ---
 

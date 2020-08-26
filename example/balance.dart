@@ -20,7 +20,7 @@ void main() async {
   Debug.log("Get reseller balance...\n");
 
   balance = await api.balanceInfo(resellerCode);
-  if (balance == Future.value(false)) {
+  if (!api.success) {
     Debug.log("\nCan't get reseller balance info!\n");
     Debug.log(api.getError());
     exit(0);
@@ -28,7 +28,7 @@ void main() async {
   Debug.log(balance, "map", "Balance info");
 
   balance = await api.balance(resellerCode);
-  if (balance == Future.value(false)) {
+  if (!api.success) {
     Debug.log("\nCan't get reseller balance!\n");
     Debug.log(api.getError());
     exit(0);
@@ -36,7 +36,7 @@ void main() async {
   Debug.log(balance, "map", "Balance");
 
   balance = await api.credit(resellerCode);
-  if (balance == Future.value(false)) {
+  if (!api.success) {
     Debug.log("\nCan't get reseller credit!\n");
     Debug.log(api.getError());
     exit(0);

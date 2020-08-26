@@ -8,7 +8,7 @@ void main() async {
 
   var result, domain;
   const domainName = "pimenov.com.ua";
-  const serviceCode = "815633";
+  const serviceCode = SERVICE_CODE;
 
   result = await api.login(API_LOGIN, API_PASSWORD);
 
@@ -22,7 +22,7 @@ void main() async {
   Debug.log("\nGet domain info for $domainName...\n");
 
   domain = await api.domainInfo(serviceCode);
-  if (domain == Future.value(false)) {
+  if (!api.success) {
     Debug.log("\nCan't get domain list or list empty!\n");
     Debug.log(api.getError());
     exit(0);
