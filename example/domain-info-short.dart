@@ -7,7 +7,7 @@ void main() async {
   ImenaAPI api = ImenaAPI(API_ENDPOINT);
 
   var result, domain;
-  const domainName = "imena.ua";
+  const domainName = "badko.org.ua";
 
   result = await api.login(API_LOGIN, API_PASSWORD);
 
@@ -22,7 +22,7 @@ void main() async {
 
   domain = await api.domainInfoShort(domainName);
   if (!api.success) {
-    Debug.log("\nCan't get domain list or list empty!\n");
+    Debug.log("\nCan't get domain info!\n");
     Debug.log(api.getError());
     exit(0);
   }

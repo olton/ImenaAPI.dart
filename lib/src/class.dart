@@ -132,7 +132,7 @@ class ImenaAPI {
   * Receiving information about the current session and authenticated user by authToken
   * API command - getAuthTokenInfo
   * */
-  Future<dynamic> tokenInfo() async {
+  Future<Map<String, dynamic>> tokenInfo() async {
     await _exec(ImenaAPIConst.COMMAND_TOKEN_INFO, {"authToken": this._authToken});
     this._info = success ? this.result : {};
     return !success ? {} : this.result;

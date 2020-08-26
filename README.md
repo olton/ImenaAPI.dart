@@ -19,7 +19,7 @@ Inside the class, the async / await methodology is used and below in the documen
 
 ## Create instance
 ```dart
-ImenaAPI api = new ImenaAPI(API_ENDPOINT_URL);
+ImenaAPI api = ImenaAPI(API_ENDPOINT_URL);
 ```
 
 ## Login to server
@@ -29,10 +29,9 @@ Future<bool> login(String login, String password) async {...}
 ```
 Example of usage
 ```dart
-ImenaAPI api = new ImenaAPI(API_ENDPOINT_URL);
-bool result = await api.login(API_LOGIN, API_PASSWORD);
+await api.login(API_LOGIN, API_PASSWORD);
 
-if (!result) {
+if (!api.success) {
     print("\nCan't login to API server!\n");
 } else {
     print("\nLogin successful, authToken is: ${api.authToken}");
@@ -46,21 +45,17 @@ Future<bool> secondAuth(code, [type = ImenaAPIConst.SECOND_AUTH_SMS]) async {...
 ```
 Example of usage
 ```dart
-bool result;
 String secondAuthCode = "...";
 
-ImenaAPI api = new ImenaAPI(API_ENDPOINT_URL);
+await api.login(API_LOGIN, API_PASSWORD);
 
-result = await api.login(API_LOGIN, API_PASSWORD);
-
-
-if (!result) {
+if (!api.success) {
     if (api.getError()['code'] == -32012) {
       // Second authentication required
       // for sms code use constant ImenaAPIConst.SECOND_AUTH_SMS
       // for google authentication use constant ImenaAPIConst.SECOND_AUTH_GOOGLE
-      result = await api.secondAuth(secondAuthCode, ImenaAPIConst.SECOND_AUTH_SMS); 
-      if (!result) {
+      await api.secondAuth(secondAuthCode, ImenaAPIConst.SECOND_AUTH_SMS); 
+      if (!api.success) {
         print("\nCan't login to API server!\n");
       } else {
         print("\nLogin successful, authToken is: ${api.authToken}");
@@ -75,14 +70,14 @@ if (!result) {
 To get `authToken` after successful authentication, you can use getter `authToken`.  
 Method definition
 ```dart
-String get authToken => this._authToken;
+String get authToken => ...;
 ```
 Example of usage
 ```dart
 ImenaAPI api = new ImenaAPI(API_ENDPOINT_URL);
-bool result = await api.login(API_LOGIN, API_PASSWORD);
+await api.login(API_LOGIN, API_PASSWORD);
 
-if (!result) {
+if (!api.success) {
     print("\nCan't login to API server!\n");
 } else {
     print("\nLogin successful, authToken is: ${api.authToken}");
@@ -108,13 +103,13 @@ Method `tokenInfo()` will return `false` or token data as `Map<String, dynamic>`
 
 Method definition
 ```dart
-Future<dynamic> tokenInfo() async {...}
+Future<Map<String, dynamic>> tokenInfo() async {...}
 ```
 Example of usage
 ```dart
 dynamic token = await api.tokenInfo();
 
-if (token == Future.value(false)) {
+if (!api.success) {
   print("\nCan't get token info!\n");
 } else {
   print(token);
@@ -132,7 +127,7 @@ Example of usage
 ```dart
 Map<String, dynamic> domains = await api.domains();
 
-if (domains.length == 0) {
+if (!api.success) {
   print("\nCan't get domain list or list empty!\n");
 } else {
   print(domains);
@@ -160,13 +155,13 @@ If you pass `filter` argument, you get all domains on your account.
 
 Method definition
 ```dart
-Future<dynamic> domainsBy([String filter = ""]) async {...}
+Future<Map<String, dynamic>> domainsBy([String filter = ""]) async {...}
 ```
 Example of usage
 ```dart
 Map<String, dynamic> domains = await api.domainsBy("part_of_domain_name");
 
-if (domains.length == 0) {
+if (!api.success) {
   print("\nCan't get domain list or list empty!\n");
 } else {
   print(domains);
@@ -178,13 +173,13 @@ To get domain info, use method `domainInfo()`. This method return `false` or `Ma
 
 Method definition
 ```dart
-Future<dynamic> domainInfo(String serviceCode) async {...}
+Future<Map<String, dynamic>> domainInfo(String serviceCode) async {...}
 ```
 Example of usage
 ```dart
 dynamic info = await api.domainInfo("123456789");
 
-if (info == Future.value(false)) {
+if (!api.success) {
   print("\nCan't get domain info!\n");
 } else {
   print(info);
@@ -199,13 +194,13 @@ The method is useful if you need to perform an internal transfer between reselle
 
 Method definition
 ```dart
-Future<dynamic> domainInfoShort(String domainName) async {...}
+Future<Map<String, dynamic>> domainInfoShort(String domainName) async {...}
 ```
 Example of usage
 ```dart
 dynamic info = await api.domainInfoShort("imena.ua");
 
-if (info == Future.value(false)) {
+if (!api.success) {
   print("\nCan't get domain info!\n");
 } else {
   print(info);
@@ -223,8 +218,8 @@ Example of usage
 ```dart
 dynamic info = await api.domainInfoShort("imena.ua");
 
-if (info == Future.value(false)) {
-  print("\nCan't get domain info!\n");
+if (!api.success) {
+  print("\nCan't get domain contacts!\n");
 } else {
   print(info);
 }
