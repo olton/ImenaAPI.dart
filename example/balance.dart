@@ -9,7 +9,7 @@ void main() async {
   var result, balance;
   const resellerCode = RESELLER_CODE;
 
-  result = await api.login(API_LOGIN, API_PASSWORD);
+  result = await api.login(login: API_LOGIN, password: API_PASSWORD);
 
   if (!result) {
     Debug.log("\nCan't login to API server!\n");

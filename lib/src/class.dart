@@ -68,7 +68,12 @@ class ImenaAPI {
   * Authentication of reseller's user
   * API command - authenticateResellerUser
   * */
-  Future<bool> login(String login, String password, {String smsCode: '', String gaCode: ''}) async {
+  Future<bool> login({
+    @required String login,
+    @required String password,
+    String smsCode: '',
+    String gaCode: ''
+  }) async {
     this._login = login;
     this._password = password;
 
@@ -92,7 +97,10 @@ class ImenaAPI {
     return true;
   }
 
-  Future<bool> secondAuth({String smsCode: '', String gaCode: ''}) async {
+  Future<bool> secondAuth({
+    String smsCode: '',
+    String gaCode: ''
+  }) async {
     Map<String, String> body = {
       "login": this._login,
       "password": this._password,
@@ -279,7 +287,10 @@ class ImenaAPI {
   * Set domain nameservers
   * API command - editDomainNameserversList
   * */
-  Future<bool> setNS(String serviceCode, List<String> ns) async {
+  Future<bool> setNS({
+    @required String serviceCode,
+    @required List<String> ns
+  }) async {
     await _exec(ImenaAPIConst.COMMAND_SET_NS, {"authToken": this._authToken, "serviceCode": serviceCode, "list": ns});
     return success;
   }

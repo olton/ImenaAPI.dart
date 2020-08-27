@@ -8,7 +8,7 @@ void main() async {
 
   var result, price;
 
-  result = await api.login(API_LOGIN, API_PASSWORD);
+  result = await api.login(login: API_LOGIN, password: API_PASSWORD);
 
   if (!result) {
     Debug.log("\nCan't login to API server!\n");

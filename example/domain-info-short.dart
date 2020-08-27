@@ -10,7 +10,7 @@ void main() async {
   const domainName = "pimenov.com.ua";
   const domainNameOut = "badko.org.ua";
 
-  result = await api.login(API_LOGIN, API_PASSWORD);
+  result = await api.login(login: API_LOGIN, password: API_PASSWORD);
 
   if (!result) {
     Debug.log("Can't login to API server!\n");

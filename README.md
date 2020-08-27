@@ -39,11 +39,16 @@ if (api.success) {
 ## Login to server
 Method definition
 ```dart
-Future<bool> login(String login, String password, {String smsCode: '', String gaCode: ''}) async {...}
+  Future<bool> login({
+    @required String login,
+    @required String password,
+    String smsCode: '',
+    String gaCode: ''
+  });
 ```
 Example of usage
 ```dart
-await api.login(API_LOGIN, API_PASSWORD);
+await api.login(login: API_LOGIN, password: API_PASSWORD);
 
 if (!api.success) {
     print("\nCan't login to API server!\n");
@@ -53,22 +58,23 @@ if (!api.success) {
 ```
 
 ## Login to server with second auth method
-Method definition
+Method definition:
 ```dart
-Future<bool> secondAuth(code, [type = ImenaAPIConst.SECOND_AUTH_SMS]) async {...}
+  Future<bool> secondAuth({
+    String smsCode: '', 
+    String gaCode: ''
+  });
 ```
-Example of usage
+Example of usage:
 ```dart
 String secondAuthCode = "...";
 
-await api.login(API_LOGIN, API_PASSWORD);
+await api.login(login: API_LOGIN, password: API_PASSWORD);
 
 if (!api.success) {
     if (api.getError()['code'] == -32012) {
       // Second authentication required
-      // for sms code use constant ImenaAPIConst.SECOND_AUTH_SMS
-      // for google authentication use constant ImenaAPIConst.SECOND_AUTH_GOOGLE
-      await api.secondAuth(secondAuthCode, ImenaAPIConst.SECOND_AUTH_SMS); 
+      await api.secondAuth(smsCode: secondAuthCode); 
       if (!api.success) {
         print("\nCan't login to API server!\n");
       } else {
@@ -81,29 +87,21 @@ if (!api.success) {
 ```
 
 ## Get authToken after authentication
-To get `authToken` after successful authentication, you can use getter `authToken`.  
-Method definition
-```dart
-String get authToken => ...;
-```
-Example of usage
-```dart
-ImenaAPI api = new ImenaAPI(API_ENDPOINT_URL);
-await api.login(API_LOGIN, API_PASSWORD);
 
-if (!api.success) {
-    print("\nCan't login to API server!\n");
-} else {
-    print("\nLogin successful, authToken is: ${api.authToken}");
-}
+To get `authToken` after successful authentication, you can use getter `authToken`. The `authToken` is available after successful authentication.
+
+Method definition:
+```dart
+String get authToken => {};
 ```
 
 ## End of session 
-To end active session, you must call method `logout()`.
+
+To stop an active session you must call method `logout()`.
 
 Method definition
 ```dart
-Future<bool> logout() async {...}
+Future<bool> logout();
 ```
 Example of usage
 ```dart
@@ -117,7 +115,7 @@ Method `tokenInfo()` will return `false` or token data as `Map<String, dynamic>`
 
 Method definition
 ```dart
-Future<Map<String, dynamic>> tokenInfo() async {...}
+Future<Map<String, dynamic>> tokenInfo();
 ```
 Example of usage
 ```dart
@@ -135,11 +133,14 @@ To get domain list, you must call method `domains()`. This method return `Map<St
 
 Method definition
 ```dart
-Future<Map<String, dynamic>> domains([int limit = 500, int offset = 0]) async {...}
+  Future<Map<String, dynamic>> domains({
+    int limit: 500,
+    int offset: 0
+  });
 ```
 Example of usage
 ```dart
-Map<String, dynamic> domains = await api.domains();
+Map<String, dynamic> domains = await api.domains(limit: 100, offset: 500);
 
 if (!api.success) {
   print("\nCan't get domain list or list empty!\n");
@@ -153,7 +154,7 @@ To get domains count, you must call method `domainTotal()`.
 
 Method definition
 ```dart
-Future<int> domainsTotal() async {...}
+Future<int> domainsTotal();
 ```
 Example of usage
 ```dart
@@ -169,11 +170,29 @@ If you pass `filter` argument, you get all domains on your account.
 
 Method definition
 ```dart
-Future<Map<String, dynamic>> domainsBy([String filter = ""]) async {...}
+Future<Map<String, dynamic>> domainsBy([String filter = ""]);
 ```
 Example of usage
 ```dart
 Map<String, dynamic> domains = await api.domainsBy("part_of_domain_name");
+
+if (!api.success) {
+  print("\nCan't get domain list or list empty!\n");
+} else {
+  print(domains);
+}
+```
+
+## Get all domains on reseller account 
+You can get all domain from your account with method `domainsAll()`. 
+
+Method definition
+```dart
+Future<Map<String, dynamic>> domainsAll();
+```
+Example of usage
+```dart
+Map<String, dynamic> domains = await api.domainsAll();
 
 if (!api.success) {
   print("\nCan't get domain list or list empty!\n");
@@ -187,7 +206,7 @@ To get domain info, use method `domainInfo()`. This method return `false` or `Ma
 
 Method definition
 ```dart
-Future<Map<String, dynamic>> domainInfo(String serviceCode) async {...}
+Future<Map<String, dynamic>> domainInfo(String serviceCode);
 ```
 Example of usage
 ```dart
@@ -208,7 +227,7 @@ The method is useful if you need to perform an internal transfer between reselle
 
 Method definition
 ```dart
-Future<Map<String, dynamic>> domainInfoShort(String domainName) async {...}
+Future<Map<String, dynamic>> domainInfoShort(String domainName);
 ```
 Example of usage
 ```dart
@@ -226,7 +245,7 @@ To get domain info, use method `contacts()`.
 
 Method definition
 ```dart
-Future<Map<String, dynamic>> contacts(String serviceCode) async {...}
+Future<Map<String, dynamic>> contacts(String serviceCode);
 ```
 Example of usage
 ```dart
@@ -243,7 +262,7 @@ if (!api.success) {
 
 Method definition
 ```dart
-Future<List<dynamic>> tags(String serviceCode) async {...}
+Future<List<dynamic>> tags(String serviceCode);
 ```
 Example of usage
 ```dart
@@ -260,7 +279,7 @@ if (!api.success) {
 
 Method definition
 ```dart
-Future<List<dynamic>> nameservers(String serviceCode) async {...}
+Future<List<dynamic>> nameservers(String serviceCode);
 ```
 Example of usage
 ```dart
@@ -277,7 +296,7 @@ if (!api.success) {
 
 Method definition
 ```dart
-Future<List<dynamic>> childNameservers(String serviceCode) async {...}
+Future<List<dynamic>> childNameservers(String serviceCode);
 ```
 Example of usage
 ```dart
@@ -295,12 +314,16 @@ if (!api.success) {
 
 Method definition
 ```dart
-Future<bool> setNS(String serviceCode, List<String> ns) async {...}
+  Future<bool> setNS({
+    @required String serviceCode, 
+    @required List<String> ns
+  });
 ```
 Example of usage
 ```dart
+String serviceCode = "123456";
 List<String> ns = const ['ns1.com', 'ns2.com', 'ns3.com'];
-await api.setNS(serviceCode, ns);
+await api.setNS(serviceCode: serviceCode, ns: ns);
 
 if (!api.success) {
   print("\nCan't set domain ns!\n");
@@ -318,7 +341,7 @@ You can set default nameservers to:
 
 Method definition
 ```dart
-Future<bool> setNSPreset(String serviceCode, [String nsType = ImenaAPIConst.HOSTING_TYPE_DEFAULTS]) async {...}
+Future<bool> setNSPreset(String serviceCode, [String nsType = ImenaAPIConst.HOSTING_TYPE_DEFAULTS]);
 ```
 Example of usage
 ```dart
@@ -337,9 +360,9 @@ You can set specified default nameservers.
 
 Method definition
 ```dart
-Future<bool> setDefaultNS(String serviceCode) async {...}
-Future<bool> setMirohostNS(String serviceCode) async {...}
-Future<bool> setDnshostingNS(String serviceCode) async {...}
+Future<bool> setDefaultNS(String serviceCode);
+Future<bool> setMirohostNS(String serviceCode);
+Future<bool> setDnshostingNS(String serviceCode);
 ```
 Example of usage
 ```dart

@@ -15,7 +15,7 @@ void main() async {
     "nsa1.srv53.org"
   ];
 
-  result = await api.login(API_LOGIN, API_PASSWORD);
+  result = await api.login(login: API_LOGIN, password: API_PASSWORD);
 
   if (!result) {
     Debug.log("\nCan't login to API server!\n");
@@ -26,7 +26,7 @@ void main() async {
 
   Debug.log("\nSet ns to ... for $domainName...\n");
 
-  ns = await api.setNS(serviceCode, nsList);
+  ns = await api.setNS(serviceCode: serviceCode, ns: nsList);
   if (!ns) {
     Debug.log("\nCan't set ns!\n");
     Debug.log(api.getError());

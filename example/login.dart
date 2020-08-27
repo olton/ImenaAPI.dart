@@ -5,7 +5,7 @@ void main() async {
 
   ImenaAPI api = ImenaAPI(API_ENDPOINT);
 
-  bool result = await api.login(API_LOGIN, API_PASSWORD);
+  bool result = await api.login(login: API_LOGIN, password: API_PASSWORD);
 
   if (!result) {
     Debug.log("\nCan't login to API server!\n");
