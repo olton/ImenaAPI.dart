@@ -39,7 +39,7 @@ if (api.success) {
 ## Login to server
 Method definition
 ```dart
-Future<bool> login(String login, String password) async {...}
+Future<bool> login(String login, String password, {String smsCode: '', String gaCode: ''}) async {...}
 ```
 Example of usage
 ```dart

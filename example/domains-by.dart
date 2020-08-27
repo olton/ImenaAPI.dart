@@ -19,7 +19,7 @@ void main() async {
 
   Debug.log("\nGet domains by name...\n");
 
-  domains = await api.domainsBy("");
+  domains = await api.domainsBy("stoy");
   if (domains.length == 0) {
     Debug.log("\nCan't get domain list or list empty!\n");
     Debug.log(api.getError());

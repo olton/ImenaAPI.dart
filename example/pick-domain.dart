@@ -21,7 +21,10 @@ void main() async {
 
   Debug.log("\nPick domains for $domainName...\n");
 
-  domain = await api.pickDomain(domainName, zone);
+  domain = await api.pickDomain(
+      names: domainName,
+      zones: zone
+  );
   if (!api.success) {
     Debug.log("\nCan't get domain list or list empty!\n");
     Debug.log(api.getError());

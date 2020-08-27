@@ -7,22 +7,31 @@ void main() async {
   ImenaAPI api = ImenaAPI(API_ENDPOINT);
 
   var result, domain;
-  const domainName = "badko.org.ua";
+  const domainName = "pimenov.com.ua";
+  const domainNameOut = "badko.org.ua";
 
   result = await api.login(API_LOGIN, API_PASSWORD);
 
   if (!result) {
-    Debug.log("\nCan't login to API server!\n");
+    Debug.log("Can't login to API server!\n");
     exit(0);
   }
 
-  Debug.log("\nLogin successful, authToken is: ${api.authToken}");
+  Debug.log("Login successful, authToken is: ${api.authToken}\n");
 
-  Debug.log("\nGet domain info for $domainName...\n");
-
+  Debug.log("Get domain info for $domainName...");
   domain = await api.domainInfoShort(domainName);
   if (!api.success) {
-    Debug.log("\nCan't get domain info!\n");
+    Debug.log("Can't get domain info for $domainName!");
+    Debug.log(api.getError());
+    exit(0);
+  }
+  Debug.log(domain, "map", "Domain info");
+
+  Debug.log("Get domain info for $domainNameOut...");
+  domain = await api.domainInfoShort(domainNameOut);
+  if (!api.success) {
+    Debug.log("Can't get domain info for $domainNameOut!");
     Debug.log(api.getError());
     exit(0);
   }

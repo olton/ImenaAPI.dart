@@ -36,7 +36,11 @@ void main() async {
 
   Debug.log("\nSet contact to ... for $domainName...\n");
 
-  setContact = await api.setContact(serviceCode, ImenaAPIConst.CONTACT_TECH, contactData);
+  setContact = await api.setContact(
+      serviceCode: serviceCode,
+      contactType: ImenaAPIConst.CONTACT_TECH,
+      contactData: contactData
+  );
   if (!setContact) {
     Debug.log("\nCan't set contact!\n");
     Debug.log(api.getError());
