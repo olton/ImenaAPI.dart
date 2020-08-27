@@ -32,15 +32,20 @@ class ImenaAPI {
 
     success = false;
 
-    http.Response httpResponse = await http.post(endpoint, headers: requestHeader, body: json.encode(requestBody));
+    try {
+      http.Response httpResponse = await http.post(
+          endpoint, headers: requestHeader, body: json.encode(requestBody));
 
-    rawResponse = httpResponse.body;
-    response = json.decode(httpResponse.body);
+      rawResponse = httpResponse.body;
+      response = json.decode(httpResponse.body);
 
-    error = response['error'];
-    result = response['result'];
+      error = response['error'];
+      result = response['result'];
 
-    success = this.error == null;
+      success = this.error == null;
+    } catch (e) {
+      print(e);
+    }
 
     return success;
   }
