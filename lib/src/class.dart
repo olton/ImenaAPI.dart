@@ -8,6 +8,7 @@ class ImenaAPI {
   var _apiRawResponse;
   var _apiResponse;
   var _apiError;
+  var _apiErrorCode;
   var _apiResult;
 
   String _authToken = null;
@@ -16,7 +17,7 @@ class ImenaAPI {
   Map<String, dynamic> _tokenData = {};
   bool success = false;
   bool httpSuccess = false;
-  var httpError = null;
+  var _httpError = null;
   http.Response _httpResponse;
 
   ImenaAPI(this._endpoint);
@@ -27,9 +28,11 @@ class ImenaAPI {
   http.Response get httpResponse => _httpResponse;
   String get rawResponse => _apiRawResponse;
   Map<dynamic, dynamic> get error => _apiError;
+  int get errorCode => int.parse(_apiErrorCode);
   Map<dynamic, dynamic> get result => _apiResult;
   Map<String, dynamic> get tokenData => _tokenData;
   String get token => _authToken;
+  dynamic get httpError => _httpError;
 
   String _transactionID() {
     return "${this.transPrefix}-${new DateTime.now().millisecondsSinceEpoch}-${this.transSuffix}";
@@ -44,6 +47,7 @@ class ImenaAPI {
     httpSuccess = false;
 
     _apiError = null;
+    _apiErrorCode = 0;
     _apiResult = null;
     _apiRawResponse = null;
     _apiResponse = null;
@@ -57,10 +61,14 @@ class ImenaAPI {
       _apiError = _apiResponse['error'];
       _apiResult = _apiResponse['result'];
 
+      if (_apiError != null) {
+        _apiErrorCode = _apiError['code'];
+      }
+
       success = _apiError == null;
       httpSuccess = true;
     } catch (e) {
-      httpError = e;
+      _httpError = e;
       print(e);
     }
 

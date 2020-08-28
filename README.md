@@ -32,8 +32,39 @@ if (api.success) {
   print(result);
 } else {
   // Check error details with method getError()
-  print(api.getError());
+  print(api.error);
 }
+```
+
+## Get errors
+To get API error use getter `error`.
+```dart
+print( api.error );
+```
+
+## Get network error
+To get network error use getter `httpError`.
+```dart
+print( api.httpError );
+```
+
+## Get full result object
+To get full result object as `Map()` use getter `result`. This getter returns all the information that was contained in the response by the result key.
+```dart
+print( api.result );
+```
+
+## Get token and tokenData
+After login successful, you can get auth token value and token data.
+
+To get auth token value use getter `token`  
+```dart
+print( api.token );
+```
+
+To get token data (reseller info) use getter `tokenData`  
+```dart
+print( api.tokenData );
 ```
 
 ## Login to server
@@ -53,7 +84,7 @@ await api.login(login: API_LOGIN, password: API_PASSWORD);
 if (!api.success) {
     print("\nCan't login to API server!\n");
 } else {
-    print("\nLogin successful, authToken is: ${api.authToken}");
+    print("\nLogin successful, authToken is: ${api.token}");
 }
 ```
 
@@ -72,17 +103,17 @@ String secondAuthCode = "...";
 await api.login(login: API_LOGIN, password: API_PASSWORD);
 
 if (!api.success) {
-    if (api.getError()['code'] == -32012) {
+    if (api.errorCode == -32012) {
       // Second authentication required
       await api.secondAuth(smsCode: secondAuthCode); 
       if (!api.success) {
         print("\nCan't login to API server!\n");
       } else {
-        print("\nLogin successful, authToken is: ${api.authToken}");
+        print("\nLogin successful, authToken is: ${api.token}");
       }  
     }
 } else {
-    print("\nLogin successful, authToken is: ${api.authToken}");
+    print("\nLogin successful, authToken is: ${api.token}");
 }
 ```
 
