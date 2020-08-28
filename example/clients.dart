@@ -15,13 +15,13 @@ void main() async {
     exit(0);
   }
 
-  Debug.log("\nLogin successful, authToken is: ${api.authToken}");
+  Debug.log("\nLogin successful, authToken is: ${api.token}");
   Debug.log("Get client list...\n");
 
   clients = await api.clients();
   if (!api.success) {
     Debug.log("\nCan't get token info!\n");
-    Debug.log(api.getError());
+    Debug.log(api.error);
     exit(0);
   }
   Debug.log(clients, "map", "Clients");

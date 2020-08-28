@@ -17,7 +17,7 @@ void main() async {
     exit(0);
   }
 
-  Debug.log("\nLogin successful, authToken is: ${api.authToken}");
+  Debug.log("\nLogin successful, authToken is: ${api.token}");
 
   Debug.log("\nPick domains for $domainName...\n");
 
@@ -27,7 +27,7 @@ void main() async {
   );
   if (!api.success) {
     Debug.log("\nCan't get domain list or list empty!\n");
-    Debug.log(api.getError());
+    Debug.log(api.error);
     exit(0);
   }
   Debug.log(domain, "map", "Domain info");

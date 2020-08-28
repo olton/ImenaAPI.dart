@@ -17,14 +17,14 @@ void main() async {
     exit(0);
   }
 
-  Debug.log("\nLogin successful, authToken is: ${api.authToken}");
+  Debug.log("\nLogin successful, authToken is: ${api.token}");
 
   Debug.log("\nGet domain nameservers for $domainName...\n");
 
   domain = await api.nameservers(serviceCode);
   if (domain == Future.value(false)) {
     Debug.log("\nCan't get domain!\n");
-    Debug.log(api.getError());
+    Debug.log(api.error);
     exit(0);
   }
   Debug.log(domain, "map", "Domain nameservers");
@@ -32,7 +32,7 @@ void main() async {
   domain = await api.childNameservers(serviceCode);
   if (domain == Future.value(false)) {
     Debug.log("\nCan't get domain!\n");
-    Debug.log(api.getError());
+    Debug.log(api.error);
     exit(0);
   }
   Debug.log(domain, "map", "Domain child nameservers");

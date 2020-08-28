@@ -10,8 +10,8 @@ void main() async {
   if (!result) {
     Debug.log("\nCan't login to API server!\n");
   } else {
-    Debug.log("\nLogin successful, authToken is: ${api.authToken}");
-    Debug.log(api.getInfo(), "map", "Info");
+    Debug.log("\nLogin successful, authToken is: ${api.token}");
+    Debug.log(api.tokenData, "map", "Info");
   }
 
 }

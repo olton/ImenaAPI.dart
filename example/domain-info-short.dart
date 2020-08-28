@@ -17,13 +17,13 @@ void main() async {
     exit(0);
   }
 
-  Debug.log("Login successful, authToken is: ${api.authToken}\n");
+  Debug.log("Login successful, authToken is: ${api.token}\n");
 
   Debug.log("Get domain info for $domainName...");
   domain = await api.domainInfoShort(domainName);
   if (!api.success) {
     Debug.log("Can't get domain info for $domainName!");
-    Debug.log(api.getError());
+    Debug.log(api.error);
     exit(0);
   }
   Debug.log(domain, "map", "Domain info");
@@ -32,7 +32,7 @@ void main() async {
   domain = await api.domainInfoShort(domainNameOut);
   if (!api.success) {
     Debug.log("Can't get domain info for $domainNameOut!");
-    Debug.log(api.getError());
+    Debug.log(api.error);
     exit(0);
   }
   Debug.log(domain, "map", "Domain info");

@@ -17,14 +17,14 @@ void main() async {
     exit(0);
   }
 
-  Debug.log("\nLogin successful, authToken is: ${api.authToken}");
+  Debug.log("\nLogin successful, authToken is: ${api.token}");
 
   Debug.log("\nSet ns to default for $domainName...\n");
 
   ns = await api.setNSPreset(serviceCode);
   if (!ns) {
     Debug.log("\nCan't set ns!\n");
-    Debug.log(api.getError());
+    Debug.log(api.error);
     exit(0);
   }
   domain = await api.nameservers(serviceCode);

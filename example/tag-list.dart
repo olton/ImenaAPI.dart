@@ -17,14 +17,14 @@ void main() async {
     exit(0);
   }
 
-  Debug.log("\nLogin successful, authToken is: ${api.authToken}");
+  Debug.log("\nLogin successful, authToken is: ${api.token}");
 
   Debug.log("\nGet domain tag list for $domainName...\n");
 
   domain = await api.tags(serviceCode);
   if (domain == Future.value(false)) {
     Debug.log("\nCan't get domain!\n");
-    Debug.log(api.getError());
+    Debug.log(api.error);
     exit(0);
   }
   Debug.log(domain, "map", "Domain info");

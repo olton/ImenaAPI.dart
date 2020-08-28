@@ -16,13 +16,13 @@ void main() async {
     exit(0);
   }
 
-  Debug.log("\nLogin successful, authToken is: ${api.authToken}");
+  Debug.log("\nLogin successful, authToken is: ${api.token}");
   Debug.log("Get reseller balance...\n");
 
   balance = await api.balanceInfo(resellerCode);
   if (!api.success) {
     Debug.log("\nCan't get reseller balance info!\n");
-    Debug.log(api.getError());
+    Debug.log(api.error);
     exit(0);
   }
   Debug.log(balance, "map", "Balance info");
@@ -30,7 +30,7 @@ void main() async {
   balance = await api.balance(resellerCode);
   if (!api.success) {
     Debug.log("\nCan't get reseller balance!\n");
-    Debug.log(api.getError());
+    Debug.log(api.error);
     exit(0);
   }
   Debug.log(balance, "map", "Balance");
@@ -38,7 +38,7 @@ void main() async {
   balance = await api.credit(resellerCode);
   if (!api.success) {
     Debug.log("\nCan't get reseller credit!\n");
-    Debug.log(api.getError());
+    Debug.log(api.error);
     exit(0);
   }
   Debug.log(balance, "map", "Credit");
