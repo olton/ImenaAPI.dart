@@ -1,4 +1,4 @@
-### Docs
+# Short docs on using ImenaAPI.dart
 
 #### About
 The `Imena.dart` is an `asynchronous` library for accessing and executing commands from the [Imena.ua](https://imena.ua) domain registrar `reseller API`.
