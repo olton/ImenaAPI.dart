@@ -551,7 +551,7 @@ Method definition
 Future<bool> deleteOrders({@required String serviceCode});
 ```
 
-## get domain auth-code for outside transfer
+## Get domain auth-code for outside transfer
 
 Method definition
 ```dart
