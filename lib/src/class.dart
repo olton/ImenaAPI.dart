@@ -688,8 +688,8 @@ class ImenaAPI {
     @required String msgLanguage,
     @required String clientType,
     @required bool isUaResident,
-    @required Map<String, dynamic> contactData,
-    @required Map<String, dynamic> legalData,
+    @required Map<String, String> contactData,
+    @required Map<String, String> legalData,
     String resellerCode = null
   }) async {
 
