@@ -397,12 +397,12 @@ if (!api.success) {
 
 ## Get, ddd and delete child name servers
 
-Methods definition
+**Get child nameservers**. Methods definition:
 ```dart
 Future<List<dynamic>> childNameservers(String serviceCode);
 ```
 
-Methods definition
+**Add child nameserver**. Methods definition:
 ```dart
 Future<bool> addChildNS({
     @required String serviceCode,
@@ -411,7 +411,7 @@ Future<bool> addChildNS({
 });
 ```
 
-Methods definition
+**Delete child nameserver**. Methods definition:
 ```dart
 Future<bool> deleteChildNS({
     @required String serviceCode,
@@ -422,7 +422,7 @@ Future<bool> deleteChildNS({
 
 ## Set contact for domain
 
-Method definition
+Method definition:
 ```dart
 Future<bool> setContact({
     @required String serviceCode,
@@ -443,29 +443,29 @@ Future<bool> setPrivacy({
 
 ## Get reseller balance info, balance, credit limit
 
-Method definition
+**Get reseller balance info**. Method definition:
 ```dart
 Future<Map<String, dynamic>> balanceInfo([String resellerCode]);
 ```
 
-Method definition
+**Get reseller balance value**. Method definition:
 ```dart
 Future<num> balance([String resellerCode]);
 ```
 
-Method definition
+**Get reseller credit limit value**. Method definition:
 ```dart
 Future<num> credit([String resellerCode]);
 ```
 
 ## Get reseller prices
 
-Method definition
+**Get reseller price list**. Method definition:
 ```dart
 Future<Map<String, dynamic>> price([String resellerCode]);
 ```
 
-Method definition
+**Get reseller price for specified domain**. Method definition:
 ```dart
 Future<Map<String, dynamic>> priceDomain({
     @required String domain,
@@ -473,7 +473,7 @@ Future<Map<String, dynamic>> priceDomain({
 });
 ```
 
-Method definition
+**Get reseller price for specified domains**. Method definition:
 ```dart
 Future<Map<String, dynamic>> priceDomains({
     @required List<String> domains,
@@ -500,7 +500,9 @@ Future<dynamic> order({
 
 ## Create payment for operation with domain name
 
-Method definition
+Create payment for a register, renew or transfer operation. You must define operation type with `paymentType` argument.
+Available payment types: `ImenaApiConst.PAYMENT_TYPE_REGISTER`, `ImenaApiConst.PAYMENT_TYPE_RENEW`, `ImenaApiConst.PAYMENT_TYPE_TRANSFER`.   
+Method definition:
 ```dart
 Future<dynamic> payment({
     @required String paymentType,
@@ -510,7 +512,7 @@ Future<dynamic> payment({
 });
 ```
 
-Method definition
+Create payment for a **renew** domain. Method definition:
 ```dart
 Future<dynamic> renew({
     @required String serviceCode,
@@ -519,7 +521,7 @@ Future<dynamic> renew({
 });
 ```
 
-Method definition
+Create payment for a **register** domain. Method definition:
 ```dart
 Future<dynamic> register({
     @required String serviceCode,
@@ -527,7 +529,7 @@ Future<dynamic> register({
 });
 ```
 
-Method definition
+Create payment for a **transfer** domain. Method definition:
 ```dart
 Future<dynamic> transfer({
     @required String serviceCode,
@@ -581,7 +583,7 @@ Future<Map<String, dynamic>> pickDomain({
 
 ## Reseller clients
 
-Method definition
+**Get reseller client list**. Method definition
 ```dart
 Future<Map<String, dynamic>> clients({
     int limit = 500,
@@ -590,12 +592,12 @@ Future<Map<String, dynamic>> clients({
 });
 ```
 
-Method definition
+**Get reseller info**. Method definition
 ```dart
 Future<dynamic> clientInfo(String clientCode);
 ```
 
-Method definition
+**Create a client**. Method definition:
 ```dart
 Future<String> createClient({
     @required String firstName,

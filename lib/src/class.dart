@@ -489,7 +489,7 @@ class ImenaAPI {
     String patentDate: null,
     String nicD: null
   }) async {
-    String cmd = orderType == ImenaAPIConst.ORDER_TYPE_ADD ? ImenaAPIConst.COMMAND_CREATE_REGISTRATION_ORDER : ImenaAPIConst.COMMAND_CREATE_TRANSFER_ORDER;
+    String cmd = orderType == ImenaAPIConst.ORDER_TYPE_REGISTER ? ImenaAPIConst.COMMAND_CREATE_REGISTRATION_ORDER : ImenaAPIConst.COMMAND_CREATE_TRANSFER_ORDER;
     Map<String, dynamic> params = {
       "authToken": _authToken,
       "clientCode": clientCode,
@@ -528,7 +528,7 @@ class ImenaAPI {
     };
 
     switch (paymentType) {
-      case ImenaAPIConst.PAYMENT_TYPE_ADD:
+      case ImenaAPIConst.PAYMENT_TYPE_REGISTER:
         cmd = ImenaAPIConst.COMMAND_CREATE_REGISTRATION_PAYMENT;
         break;
       case ImenaAPIConst.PAYMENT_TYPE_TRANSFER:
@@ -568,7 +568,7 @@ class ImenaAPI {
     int term: 1
   }) async {
     return payment(
-        paymentType: ImenaAPIConst.PAYMENT_TYPE_ADD,
+        paymentType: ImenaAPIConst.PAYMENT_TYPE_REGISTER,
         serviceCode: serviceCode,
         term: term
     );

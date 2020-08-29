@@ -52,10 +52,10 @@ class ImenaAPIConst {
   static const SECOND_AUTH_SMS = 'sms';
   static const SECOND_AUTH_GOOGLE = 'google';
 
-  static const ORDER_TYPE_ADD = 'add';
+  static const ORDER_TYPE_REGISTER = 'add';
   static const ORDER_TYPE_TRANSFER = 'transfer';
 
-  static const PAYMENT_TYPE_ADD = 'add';
+  static const PAYMENT_TYPE_REGISTER = 'add';
   static const PAYMENT_TYPE_TRANSFER = 'transfer';
   static const PAYMENT_TYPE_RENEW = 'renew';
 
