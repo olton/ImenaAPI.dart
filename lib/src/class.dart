@@ -409,7 +409,7 @@ class ImenaAPI {
   * Get reseller balance
   * API command - getResellerBalance
   * */
-  Future<dynamic> balance([String resellerCode]) async {
+  Future<num> balance([String resellerCode]) async {
     await balanceInfo(resellerCode);
     return !success ? 0 : _apiResult['balance'];
   }
@@ -418,7 +418,7 @@ class ImenaAPI {
   * Get reseller credit
   * API command - getResellerBalance
   * */
-  Future<dynamic> credit([String resellerCode]) async {
+  Future<num> credit([String resellerCode]) async {
     await balanceInfo(resellerCode);
     return !success ? 0 : _apiResult['creditLimit'];
   }

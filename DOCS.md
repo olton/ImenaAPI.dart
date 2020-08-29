@@ -395,29 +395,220 @@ if (!api.success) {
 }
 ```
 
-## Add and delete child name servers
-## Set contact for domain
-## Set privacy protection
-## Get reseller balance info
-## Get reseller balance
-## Get reseller credit
-## Get reseller prices
-## Get reseller prices for specified domain
-## Get reseller prices for specified domains
-## Create an order to get a domain for serving (registration, transfer)
-## Create payment for operation with domain name
-## Create payment for registration
-## Create payment for renew
-## Create payment for transfer
-## Get payment status
-## Delete unused orders
-## get domain auth-code for outside transfer
-## Internal transfer between imena clients
-## Pick domain names
-## Get reseller client list
-## Get reseller client info
-## Create client
+## Get, ddd and delete child name servers
 
+Methods definition
+```dart
+Future<List<dynamic>> childNameservers(String serviceCode);
+```
+
+Methods definition
+```dart
+Future<bool> addChildNS({
+    @required String serviceCode,
+    @required String host,
+    @required String ip
+});
+```
+
+Methods definition
+```dart
+Future<bool> deleteChildNS({
+    @required String serviceCode,
+    @required String host,
+    @required String ip
+});
+```
+
+## Set contact for domain
+
+Method definition
+```dart
+Future<bool> setContact({
+    @required String serviceCode,
+    @required String contactType,
+    @required Map<String, String> contactData
+});
+```
+
+## Set privacy protection
+
+Method definition
+```dart
+Future<bool> setPrivacy({
+    @required String serviceCode,
+    bool disclose: false
+});
+```
+
+## Get reseller balance info, balance, credit limit
+
+Method definition
+```dart
+Future<Map<String, dynamic>> balanceInfo([String resellerCode]);
+```
+
+Method definition
+```dart
+Future<num> balance([String resellerCode]);
+```
+
+Method definition
+```dart
+Future<num> credit([String resellerCode]);
+```
+
+## Get reseller prices
+
+Method definition
+```dart
+Future<Map<String, dynamic>> price([String resellerCode]);
+```
+
+Method definition
+```dart
+Future<Map<String, dynamic>> priceDomain({
+    @required String domain,
+    String resellerCode: null
+});
+```
+
+Method definition
+```dart
+Future<Map<String, dynamic>> priceDomains({
+    @required List<String> domains,
+    String resellerCode: null
+});
+```
+
+## Create an order to get a domain for serving (registration, transfer)
+
+Method definition
+```dart
+Future<dynamic> order({
+    @required String orderType,
+    @required String clientCode,
+    @required String domainName,
+    int term: 1,
+    String aeroId: null,
+    String ensAuthKey: null,
+    String patentNumber: null,
+    String patentDate: null,
+    String nicD: null
+});
+```
+
+## Create payment for operation with domain name
+
+Method definition
+```dart
+Future<dynamic> payment({
+    @required String paymentType,
+    @required String serviceCode,
+    int term: 1,
+    currentStopDate: null
+});
+```
+
+Method definition
+```dart
+Future<dynamic> renew({
+    @required String serviceCode,
+    @required String currentStopDate,
+    int term: 1
+});
+```
+
+Method definition
+```dart
+Future<dynamic> register({
+    @required String serviceCode,
+    int term: 1
+});
+```
+
+Method definition
+```dart
+Future<dynamic> transfer({
+    @required String serviceCode,
+    int term: 1
+});
+```
+
+## Get payment status
+
+Method definition
+```dart
+Future<Map<String, dynamic>> paymentStatus({@required String paymentId});
+```
+
+## Delete unused orders
+
+Method definition
+```dart
+Future<bool> deleteOrders({@required String serviceCode});
+```
+
+## get domain auth-code for outside transfer
+
+Method definition
+```dart
+Future<String> getAuthCode({@required String serviceCode});
+```
+
+## Internal transfer between imena clients
+
+Method definition
+```dart
+Future<bool> internalTransfer({
+    @required String serviceCode,
+    @required String authCode,
+    @required String clientCode
+});
+```
+
+## Pick domain names
+
+Method definition
+```dart
+Future<Map<String, dynamic>> pickDomain({
+    @required List<String> names,
+    @required List<String> zones,
+    List<String> filter = const [],
+    String resellerCode = null
+});
+```
+
+## Reseller clients
+
+Method definition
+```dart
+Future<Map<String, dynamic>> clients({
+    int limit = 500,
+    int offset = 0,
+    String resellerCode = null
+});
+```
+
+Method definition
+```dart
+Future<dynamic> clientInfo(String clientCode);
+```
+
+Method definition
+```dart
+Future<String> createClient({
+    @required String firstName,
+    @required String middleName,
+    @required String lastName,
+    @required String msgLanguage,
+    @required String clientType,
+    @required bool isUaResident,
+    @required Map<String, dynamic> contactData,
+    @required Map<String, dynamic> legalData,
+    String resellerCode = null
+});
+```
 
 ---
 
