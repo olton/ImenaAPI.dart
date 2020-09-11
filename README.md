@@ -8,7 +8,7 @@ Imena.ua API dart implementation
 
 ### Docs
 
-You can read docs about how to use a class [here](DOCS.md)
+You can read docs about how to use a class [here](doc/DOCS.md)
 
 ### License
 This software licensed under the MIT license.

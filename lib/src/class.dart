@@ -205,7 +205,7 @@ class ImenaAPI {
   * Find domains by name
   * */
   Future<Map<String, dynamic>> domainsBy([String filter = ""]) async {
-    Map<String, dynamic> domainList = new Map();
+    Map<String, dynamic> domainList = {};
     int limit = 500;
     int total = await domainsTotal();
     int pages;
@@ -389,6 +389,10 @@ class ImenaAPI {
         ImenaAPIConst.COMMAND_UPD_CONTACT, {"authToken": this._authToken, "serviceCode": serviceCode, "contactType": contactType, "contact": contactData});
   }
 
+  /*
+  * Set contact visibility.
+  * If argument disclose is true, contact data will be visible in whois
+  * */
   Future<bool> setPrivacy({
     @required String serviceCode,
     bool disclose: false
@@ -475,7 +479,7 @@ class ImenaAPI {
   /*
   * Create order for domain - add, transfer
   * API command - createDomainRegistrationOrder, createDomainTransferOrder
-  * For registration domain use orderType - ImenaAPIConst.ORDER_TYPE_ADD
+  * For registration domain use orderType - ImenaAPIConst.ORDER_TYPE_REGISTER
   * For transfer domain use orderType - ImenaAPIConst.ORDER_TYPE_TRANSFER
   * */
   Future<dynamic> order({

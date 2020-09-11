@@ -7,4 +7,4 @@ issue_tracker: https://github.com/olton/ImenaAPI.dart/issues
 
 dependencies:
   http: ^0.12.2
-  meta: any
+  meta:
