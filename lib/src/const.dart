@@ -34,6 +34,10 @@ class ImenaAPIConst {
   static const COMMAND_GET_AUTH_CODE = 'initOutgoingDomainTransfer';
   static const COMMAND_INTERNAL_TRANSFER = 'internalDomainTransfer';
 
+  static const COMMAND_DNS_GET_DATA = 'getDomainDnsData';
+  static const COMMAND_DNS_SET_DEFAULT = 'setDomainDnsToDefault';
+  static const COMMAND_DNS_SET_DATA = 'editDomainDnsData';
+
   static const CONTACT_ADMIN = 'admin-c';
   static const CONTACT_TECH = 'tech-c';
   static const CONTACT_OWNER = 'owner-c';

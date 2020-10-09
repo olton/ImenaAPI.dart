@@ -17,9 +17,9 @@ void main() async {
 
   Debug.log("\nLogin successful, authToken is: ${api.token}");
 
-  Debug.log("\nGet domains by name...\n");
+  Debug.log("\nGet all domains...\n");
 
-  domains = await api.domainsBy("pimenov");
+  domains = await api.domainsAll();
   if (domains.length == 0) {
     Debug.log("\nCan't get domain list or list empty!\n");
     Debug.log(api.error);

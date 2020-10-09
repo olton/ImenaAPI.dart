@@ -378,6 +378,10 @@ class ImenaAPI {
   }
 
   /*
+  * TODO ADD Contacts, Contact, ContactAdmin, ContactTech, ContactBilling, ContactOwner
+  * */
+
+  /*
   * Editing the contact data of a domain name by serviceCode and contactType
   * */
   Future<bool> setContact({
@@ -711,5 +715,42 @@ class ImenaAPI {
     });
 
     return !success ? "" : _apiResult["clientCode"].toString();
+  }
+
+  Future<Map<String, dynamic>> dnsInfo(String serviceCode) async {
+    await _exec(ImenaAPIConst.COMMAND_DNS_GET_DATA, {
+      "authToken": this._authToken, "serviceCode": serviceCode
+    });
+
+    return !success ? "" : _apiResult;
+  }
+
+  Future<bool> setDnsDefault(String serviceCode) async {
+    return await _exec(ImenaAPIConst.COMMAND_DNS_SET_DEFAULT, {
+      "authToken": this._authToken, "serviceCode": serviceCode
+    });
+  }
+
+  Future<bool> setDnsInfo({
+    @required String serviceCode,
+    @required List<Map<String, dynamic>> records,
+    int retry: 600,
+    int ttl: 3600,
+    int negativeTtl: 1800,
+    int refresh: 1800,
+    int expire: 2419200
+  }) async {
+    return await _exec(ImenaAPIConst.COMMAND_DNS_SET_DATA, {
+      "authToken": this._authToken,
+      "serviceCode": serviceCode,
+      "dnsZone": {
+        "retry": retry,
+        "ttl": ttl,
+        "negativeTtl": negativeTtl,
+        "refresh": refresh,
+        "expire": expire,
+        "records": records,
+      }
+    });
   }
 }
